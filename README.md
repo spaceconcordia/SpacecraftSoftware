@@ -7,5 +7,10 @@
 - [Dev environment](https://github.com/ajpower/vagrant)
 - [Documentation](https://github.com/Slijs/SpacecraftSoftware/wiki)
 
+
+## Slack (Space Concordia)
+- spacecraft_software (conversation)
+- spacecraft_software_a (auto updates)
+
 ### Useful tools
 - [Lucidchart](https://www.lucidchart.com/) for diagrams
