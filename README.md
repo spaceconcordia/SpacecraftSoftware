@@ -1,5 +1,8 @@
 # Spacecraft Software
 
+## Git Workflow
+[Branching workflow](https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows)
+
 ##Project Links
 ### Organization
 - [Github repository](https://github.com/Slijs/SpacecraftSoftware)
