@@ -5,7 +5,7 @@
 
 ##Project Links
 ### Organization
-- [Github repository](https://github.com/Slijs/SpacecraftSoftware)
+- [Github repository](https://github.com/spaceconcordia/SpacecraftSoftware)
 - [Project management](https://tree.taiga.io/project/slijs-spacecraft-software/)
 - [Dev environment](https://github.com/spaceconcordia/vagrant)
 - [Documentation](https://github.com/Slijs/SpacecraftSoftware/wiki)
