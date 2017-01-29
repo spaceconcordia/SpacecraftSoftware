@@ -10,6 +10,7 @@
   - There will be 2 choices, depending on the size of the task
     1. Upon starting a new small development task, create a topic branch off of master, named `topic-DESCRIPTIVE_NAME`. Do all development, and merge back into master.
     2. Upon starting a new large development task, create a feature branch off of master, named `feature-DESCRIPTIVE_NAME`. Create topic branches from this new branch.
+- Can link commit messages to taiga, see [these instructions](https://tree.taiga.io/support/integrations/changing-elements-status-via-commit-message/).
 
 ### Further Reading
 [Branching workflow](https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows)
