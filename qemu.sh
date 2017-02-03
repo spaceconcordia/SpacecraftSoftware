@@ -1,6 +1,12 @@
 #!/bin/bash
 # Starts the Qemu emulator.
 
+if [ ! -d ~/buildroot-qemu ]; then
+	>&2 echo "Error: ~/buildroot-qemu could not be found. Did you build the
+	project yet?"
+	exit 1
+fi
+
 cd ~/buildroot-qemu
 
 QEMU_AUDIO_DRV=none qemu-system-arm \
