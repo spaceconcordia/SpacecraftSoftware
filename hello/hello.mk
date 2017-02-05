@@ -11,13 +11,29 @@ DEBUG_CFLAGS = -g
 
 ifeq ($(mode), release)
     CFLAGS += RELEASE_CFLAGS
+    BUILD_DIR += /release
 else
 ifeq ($(mode), debug)
     CFLAGS += DEBUG_CFLAGS
+    BUILD_DIR += /debug
 else
     $(error mode was not set or set to an invalid value.)
 endif
 endif
 
-clean:
-	@echo cleaning!
+C_FILES := $(wildcard $(SRC_DIR)/*.c)
+OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(C_FILES))
+DEPS := $(OBJS:.o=.d)
+
+all: $(EXE)
+
+$(EXE): $(OBJS)
+	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$(EXE) $(OBJS)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+# Automatically detect dependencies.
+$(BUILD_DIR)/%.d: $(SRC_DIR)/%.c
+	@$(CC) $(FLAGS) -MM -MT $(@:.d=.o) $< > $@
+-include $(DEPS)
