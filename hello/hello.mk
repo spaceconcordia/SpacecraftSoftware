@@ -11,11 +11,11 @@ DEBUG_CFLAGS = -g
 
 ifeq ($(mode), release)
     CFLAGS += RELEASE_CFLAGS
-    BUILD_DIR += /release
+    BUILD_DIR := $(BUILD_DIR)/release
 else
 ifeq ($(mode), debug)
-    CFLAGS += DEBUG_CFLAGS
-    BUILD_DIR += /debug
+    CFLAGS += -DEBUG_CFLAGS
+    BUILD_DIR := $(BUILD_DIR)/debug
 else
     $(error mode was not set or set to an invalid value.)
 endif
@@ -31,9 +31,11 @@ $(EXE): $(OBJS)
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$(EXE) $(OBJS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 # Automatically detect dependencies.
 $(BUILD_DIR)/%.d: $(SRC_DIR)/%.c
-	@$(CC) $(FLAGS) -MM -MT $(@:.d=.o) $< > $@
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -MM -MT $(@:.d=.o) $< > $@
 -include $(DEPS)
