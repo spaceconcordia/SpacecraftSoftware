@@ -23,4 +23,4 @@ BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="versatile-pb"
 
 # Space Concordia customizations.
-BR2_ROOTFS_OVERLAY=$(BR2_EXTERNAL_SC_TREE_PATH)/board/qemu/overlay/
+BR2_ROOTFS_OVERLAY="$(BR2_EXTERNAL_SC_TREE_PATH)/board/qemu/overlay/"

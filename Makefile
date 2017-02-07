@@ -55,22 +55,29 @@ else
 ifdef mode
     $(error mode must be set to release or debug)
 else
-ifneq ($(MAKECMDGOALS), clean)
+ifeq ($(filter $(MAKECMDGOALS), build clean),)
     $(error mode must be specified)
 endif
 endif
 endif
 endif
 
-.PHONY = all clean
-.DEFAULT_GOAL = all
-
-# Include makefiles from each package.
-include $(foreach pkg, $(PACKAGES), $(pkg)/$(pkg).mk)
+.PHONY = all build clean
 
 all: $(PACKAGES)
 
-# Calls the clean goal in each package makefile and removes the overlay
+# Build the embedded Linux OS with external tree.
+build:
+ifeq ($(target), qemu)
+	make BR2_EXTERNAL=$(shell pwd)/ext-tree \
+		O=$(shell echo ~)/buildroot-qemu sc_qemu_defconfig -C buildroot
+	make -C $(shell echo ~)/buildroot-qemu
+endif
+
+# Call the clean goal in each package makefile and removes the overlay
 # directory.
 clean: $(foreach pkg, $(PACKAGES), $(pkg)_clean)
 	@if [ -d $(OVERLAY_DIR) ]; then rm -r $(OVERLAY_DIR); fi
+
+# Include makefiles from each package.
+include $(foreach pkg, $(PACKAGES), $(pkg)/$(pkg).mk)

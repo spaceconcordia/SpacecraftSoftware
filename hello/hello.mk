@@ -18,7 +18,7 @@ DEPS := $(OBJS:.o=.d)
 
 # Include generated makefiles containing object dependencies unless the clean
 # target was specified.
-ifneq ($(MAKECMDGOALS), clean)
+ifeq ($(filter $(MAKECMDGOALS), build clean),)
     -include $(DEPS)
 endif
 
