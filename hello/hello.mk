@@ -2,18 +2,20 @@ EXE_NAME = hello
 BUILD_DIR = build
 INSTALL_DIR = usr/bin# Relative to root directory in target file system.
 SRC_DIR = src
+TEST_DIR = test
 
 CC = gcc
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
 
-.PHONY = all clean check_target check_mode
+.PHONY = all test clean check_target check_mode
 
 # Check if the target variable was set on the command line. If not, set
 # NO_TARGET to 1. If target was set to an invalid value, throw an error.
 NO_TARGET = 1
 ifeq ($(target), qemu)
+    BUILD_DIR := $(BUILD_DIR)/qemu
     OVERLAY_DIR = ../ext-tree/board/qemu/overlay
     EXE = $(OVERLAY_DIR)/$(INSTALL_DIR)/$(EXE_NAME)
     NO_TARGET = 0
@@ -50,7 +52,13 @@ C_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(C_FILES))
 DEPS := $(OBJS:.o=.d)
 
-all: $(EXE) | check_target check_mode
+# Include generated makefiles containing object dependencies unless the clean
+# target was specified.
+ifneq ($(MAKECMDGOALS), clean)
+    -include $(DEPS)
+endif
+
+all: $(EXE) test | check_target check_mode
 
 # Removes the build directory containing object files, but not the executables
 # in the external tree.
@@ -83,9 +91,3 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | check_target check_mode
 $(BUILD_DIR)/%.d: $(SRC_DIR)/%.c | check_target check_mode
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -MM -MT $(@:.d=.o) $< > $@
-
-# Include generated makefiles containing object dependencies unless the clean
-# target was specified.
-ifneq ($(MAKECMDGOALS), clean)
-    -include $(DEPS)
-endif
