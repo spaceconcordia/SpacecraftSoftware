@@ -16,7 +16,7 @@ PACKAGES = hello
 # DEBUG_CFLAGS: additional flags to use with C compiler in debug mode.
 BUILD_DIR = build
 OVERLAY_DIR = ext-tree/board
-CC = arm-buildroot-linux-uclibcgnueabi-gcc
+CC = arm-buildroot-linux-uclibcgnueabi-cc
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
