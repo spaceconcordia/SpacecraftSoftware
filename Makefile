@@ -16,7 +16,7 @@ PACKAGES = hello
 # DEBUG_CFLAGS: additional flags to use with C compiler in debug mode.
 BUILD_DIR = build
 OVERLAY_DIR = ext-tree/board
-CC = gcc
+CC = arm-buildroot-linux-uclibcgnueabi-gcc
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
@@ -27,6 +27,8 @@ DEBUG_CFLAGS = -g
 ifeq ($(target), qemu)
     BUILD_DIR := $(BUILD_DIR)/qemu
     OVERLAY_DIR := $(OVERLAY_DIR)/qemu/overlay
+
+    export PATH := $(shell echo ~)/buildroot-qemu/host/usr/bin:$(PATH)
 else
 ifeq ($(target), arietta)
     $(error target arietta is not currently supported)
