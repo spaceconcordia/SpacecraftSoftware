@@ -1,55 +1,19 @@
-EXE_NAME = hello
-BUILD_DIR = build
+# Note that this makefile is expected to be called by the project's root
+# Makefile. It should NOT be called manually. As a consequence, all directories
+# are relative to the project root, not the package root.
+
+PKG_NAME = hello
 INSTALL_DIR = usr/bin# Relative to root directory in target file system.
-SRC_DIR = src
-TEST_DIR = test
+SRC_DIR = $(PKG_NAME)/src
+TEST_DIR = $(PKG_NAME)/test
 
-CC = gcc
-CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
-RELEASE_CFLAGS = -O2 -s -DNDEBUG
-DEBUG_CFLAGS = -g
-
-.PHONY = all test clean check_target check_mode
-
-# Check if the target variable was set on the command line. If not, set
-# NO_TARGET to 1. If target was set to an invalid value, throw an error.
-NO_TARGET = 1
-ifeq ($(target), qemu)
-    BUILD_DIR := $(BUILD_DIR)/qemu
-    OVERLAY_DIR = ../ext-tree/board/qemu/overlay
-    EXE = $(OVERLAY_DIR)/$(INSTALL_DIR)/$(EXE_NAME)
-    NO_TARGET = 0
-else
-ifeq ($(target), arietta)
-    $(error target arietta is not currently supported)
-else
-ifdef target
-    $(error target must be set to qemu or arietta)
-endif
-endif
-endif
-
-# Check if the mode variable was set on the command line. If not, set NO_MODE to
-# 1. If mode was set to an invalid value, throw an error.
-NO_MODE = 1
-ifeq ($(mode), release)
-    CFLAGS += $(RELEASE_CFLAGS)
-    BUILD_DIR := $(BUILD_DIR)/release
-    NO_MODE = 0
-else
-ifeq ($(mode), debug)
-    CFLAGS += $(DEBUG_CFLAGS)
-    BUILD_DIR := $(BUILD_DIR)/debug
-    NO_MODE = 0
-else
-ifdef mode
-    $(error mode must be set to release or debug)
-endif
-endif
-endif
+# Set executable path based on OVERLAY_DIR and package build directory based on
+# BUILD_DIR.
+EXE = $(OVERLAY_DIR)/$(INSTALL_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR = $(PKG_NAME)/$(BUILD_DIR)
 
 C_FILES := $(wildcard $(SRC_DIR)/*.c)
-OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(C_FILES))
+OBJS := $(patsubst $(SRC_DIR)/%.c, $(PKG_BUILD_DIR)/%.o, $(C_FILES))
 DEPS := $(OBJS:.o=.d)
 
 # Include generated makefiles containing object dependencies unless the clean
@@ -58,36 +22,24 @@ ifneq ($(MAKECMDGOALS), clean)
     -include $(DEPS)
 endif
 
-all: $(EXE) test | check_target check_mode
+.PHONY += $(PKG_NAME) $(PKG_NAME)_clean
+
+$(PKG_NAME): $(EXE)
 
 # Removes the build directory containing object files, but not the executables
 # in the external tree.
-clean:
-	@if [ -d $(BUILD_DIR) ]; then rm -r $(BUILD_DIR); fi
+$(PKG_NAME)_clean:
+	@if [ -d $(PKG_BUILD_DIR) ]; then rm -r $(PKG_BUILD_DIR); fi
 
-# Throw an error if target was not set.
-check_target:
-ifeq ($(NO_TARGET), 1)
-	@>&2 echo "error: target was not set."
-	@exit 1
-endif
-
-# Throw an error if mode was not set.
-check_mode:
-ifeq ($(NO_MODE), 1)
-	@>&2 echo "error: mode was not set."
-	@exit 1
-endif
-
-$(EXE): $(OBJS) | check_target check_mode
+$(EXE): $(OBJS)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $(EXE) $(OBJS)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | check_target check_mode
+$(PKG_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 # Automatically detect dependencies.
-$(BUILD_DIR)/%.d: $(SRC_DIR)/%.c | check_target check_mode
+$(PKG_BUILD_DIR)/%.d: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -MM -MT $(@:.d=.o) $< > $@
