@@ -55,18 +55,20 @@ all: $(EXE) | check_target check_mode
 # Removes the build directory containing object files, but not the executables
 # in the external tree.
 clean:
-	@if [ -d build ]; then rm -r build; fi
+	@if [ -d $(BUILD_DIR) ]; then rm -r $(BUILD_DIR); fi
 
 # Throw an error if target was not set.
 check_target:
 ifeq ($(NO_TARGET), 1)
 	@>&2 echo "error: target was not set."
+	@exit 1
 endif
 
 # Throw an error if mode was not set.
 check_mode:
 ifeq ($(NO_MODE), 1)
 	@>&2 echo "error: mode was not set."
+	@exit 1
 endif
 
 $(EXE): $(OBJS) | check_target check_mode
@@ -81,4 +83,9 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | check_target check_mode
 $(BUILD_DIR)/%.d: $(SRC_DIR)/%.c | check_target check_mode
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -MM -MT $(@:.d=.o) $< > $@
--include $(DEPS)
+
+# Include generated makefiles containing object dependencies unless the clean
+# target was specified.
+ifneq ($(MAKECMDGOALS), clean)
+    -include $(DEPS)
+endif
