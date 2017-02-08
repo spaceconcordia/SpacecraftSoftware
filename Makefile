@@ -29,6 +29,7 @@ ifeq ($(target), qemu)
     BUILD_DIR := $(BUILD_DIR)/qemu
     OVERLAY_DIR := $(OVERLAY_DIR)/qemu/overlay
 
+    # Add directory containing compiler to PATH.
     export PATH := $(shell echo ~)/buildroot-qemu/host/usr/bin:$(PATH)
 else
 ifeq ($(target), arietta)
@@ -37,7 +38,7 @@ else
 ifdef target
     $(error target must be set to qemu or arietta)
 else
-ifneq ($(MAKECMDGOALS), clean)
+ifeq ($(filter $(MAKECMDGOALS), clean clean_tree),)
     $(error target must be specified)
 endif
 endif
@@ -58,16 +59,16 @@ else
 ifdef mode
     $(error mode must be set to release or debug)
 else
-ifeq ($(filter $(MAKECMDGOALS), build clean),)
+ifeq ($(filter $(MAKECMDGOALS), build clean clean_tree),)
     $(error mode must be specified)
 endif
 endif
 endif
 endif
 
-.PHONY = all test build clean
+.PHONY = all build clean clean_tree
 
-all: $(PACKAGES) test
+all: $(PACKAGES)
 
 test: $(foreach pkg, $(PACKAGES), $(pkg)_test)
 
@@ -81,7 +82,10 @@ endif
 
 # Call the clean goal in each package makefile and removes the overlay
 # directory.
-clean: $(foreach pkg, $(PACKAGES), $(pkg)_clean)
+clean: $(foreach pkg, $(PACKAGES), $(pkg)_clean) clean_tree
+
+# Remove the overlay directory.
+clean_tree:
 	@if [ -d $(OVERLAY_DIR) ]; then rm -r $(OVERLAY_DIR); fi
 
 # Include makefiles from each package.
