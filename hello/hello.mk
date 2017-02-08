@@ -19,6 +19,9 @@ TEST_FILES := $(wildcard $(TEST_DIR)/*.c)
 TEST_OBJS := $(patsubst $(TEST_DIR)/%.c, $(PKG_BUILD_DIR)/%.o, $(TEST_FILES))
 DEPS := $(OBJS:.o=.d)
 
+# Linker commands for check unit test framework.
+TEST_LD = -lcheck -lsubunit -lrt -lm -pthread
+
 # Include generated makefiles containing object dependencies unless the clean
 # target was specified.
 ifeq ($(filter $(MAKECMDGOALS), build clean),)
@@ -42,13 +45,21 @@ $(EXE): $(SRC_OBJS)
 
 $(TEST_EXE): $(TEST_OBJS)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $< $(TEST_LD)
 
 $(PKG_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+$(PKG_BUILD_DIR)/%.o: $(TEST_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 # Automatically detect dependencies.
 $(PKG_BUILD_DIR)/%.d: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -MM -MT $(@:.d=.o) $< > $@
+
+$(PKG_BUILD_DIR)/%.d: $(TEST_DIR)/%.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -MM -MT $(@:.d=.o) $< > $@
