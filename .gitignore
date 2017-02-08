@@ -1,2 +1,6 @@
 *.swp
 ext-tree/board/
+
+# backup text files
+*.un~
+*~
