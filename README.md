@@ -16,14 +16,15 @@ to help you understand the development environment. If you enter the `hello`
 directory, you will see that each package is a self-contained project, with its
 own README, Makefile, .gitignore, and unit tests.
 
-To build the packages, run the command `make target=<target> mode=<mode>`, where
-target can be either `qemu` or `arietta` and mode can be either `debug` or
-`release`. To build the unit tests, run the command `make target=<target>
-mode=<mode> test`. (Presently this does not work as the unit testing framework
-has yet to be integrated with the toolchain.) Finally, to build the Linux OS,
-run the command `make target=<target> build`. **Note that it will take
-approximately one hour to build the OS.** Subsequent invokations of `make` will
-not need to rebuild the entire OS and so will take much less time. Further note
+Before building any packages, run `make target=<target> build`, where target can
+be either `qemu` or `arietta`. **Note that it will take approximately one hour
+to build the OS.** To build the packages, run the command `make target=<target>
+mode=<mode>`, where mode can be either `debug` or `release`. To build the unit
+tests, run the command `make target=<target> mode=<mode> test`. (Presently this
+does not work as the unit testing framework has yet to be integrated with the
+toolchain.) Finally, to rebuild the Linux OS, run the command `make target=<target>
+build`. Subsequent invokations of `make` will not need to rebuild the entire OS
+and so will take much less time. Further note
 that the build output will be in your home directory. This is because most
 developers will be compiling this project in a shared folder inside our Vagrant
 environment, and the Linux kernel cannot be built in a shared folder.
