@@ -26,8 +26,10 @@ not be built nor should the emulator be run. In this case, package executables
 will be found in their associated project directory.
 
 Finally, to build the Linux OS, run the command `make target=<target> build`.
-This step requires that the target be specified.
-**Note that it will take approximately one hour to build the OS.** Subsequent
+This step requires that the target be specified. **Note that you should run
+this command before building any packages if you are not compiling for the
+local machine.** (This is a bug that should be fixed soon.) Furthermore,
+**note that it will take approximately one hour to build the OS.** Subsequent
 invokations of `make` will not need to rebuild the entire OS and so will take
 much less time. Further note that the build output will be in your home
 directory. This is because most developers will be compiling this project in a

@@ -31,7 +31,6 @@ DEBUG_CFLAGS = -g
 # CC: path to C compiler.
 # OVERLAY_DIRECTORY: modified based on target.
 ifndef target
-    BUILD_DIR := $(BUILD_DIR)/local
     CC = gcc
 else
 ifeq ($(target), qemu)
@@ -92,6 +91,7 @@ ifeq ($(target), qemu)
 	make BR2_EXTERNAL=$(shell pwd)/ext-tree \
 		O=$(shell echo ~)/buildroot-qemu sc_qemu_defconfig -C buildroot
 	make -C $(shell echo ~)/buildroot-qemu
+endif
 endif
 
 # Call the clean goal in each package makefile and removes the overlay
