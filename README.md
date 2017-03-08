@@ -20,13 +20,19 @@ To build the packages, run the command `make target=<target> mode=<mode>`, where
 target can be either `qemu` or `arietta` and mode can be either `debug` or
 `release`. To build the unit tests, run the command `make target=<target>
 mode=<mode> test`. (Presently this does not work as the unit testing framework
-has yet to be integrated with the toolchain.) Finally, to build the Linux OS,
-run the command `make target=<target> build`. **Note that it will take
-approximately one hour to build the OS.** Subsequent invokations of `make` will
-not need to rebuild the entire OS and so will take much less time. Further note
-that the build output will be in your home directory. This is because most
-developers will be compiling this project in a shared folder inside our Vagrant
-environment, and the Linux kernel cannot be built in a shared folder.
+has yet to be integrated with the toolchain.) If the target is not specified,
+the packages are built for the local machine; consequently, the Linux OS need
+not be built nor should the emulator be run. In this case, package executables
+will be found in their associated project directory.
+
+Finally, to build the Linux OS, run the command `make target=<target> build`.
+This step requires that the target be specified.
+**Note that it will take approximately one hour to build the OS.** Subsequent
+invokations of `make` will not need to rebuild the entire OS and so will take
+much less time. Further note that the build output will be in your home
+directory. This is because most developers will be compiling this project in a
+shared folder inside our Vagrant environment, and the Linux kernel cannot be
+built in a shared folder.
 
 To run the emulator, simply execute the `qemu.sh` script with `./qemu.sh`. After
 some generic boot messages, you will be prompter for login information. The
