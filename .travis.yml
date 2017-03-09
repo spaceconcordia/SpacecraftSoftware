@@ -1,4 +1,6 @@
 language: c
 script:
         - make mode=debug
+        - make mode=debug test
         - make mode=release
+        - make mode=release test
