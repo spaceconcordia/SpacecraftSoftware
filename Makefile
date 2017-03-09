@@ -17,16 +17,25 @@ PACKAGES = hello
 # DEBUG_CFLAGS: additional flags to use with C compiler in debug mode.
 BUILD_DIR = build
 OVERLAY_DIR = ext-tree/board
-CC = arm-buildroot-linux-uclibcgnueabi-cc
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
 
-# Check if the target variable was set on the command line. If not, throw an
-# error unless a goal that does not require a target was called. If target is
-# invalid, throw an error no matter what.
+# Check if the `target` variable was set on the command line. If not, local
+# machine becomes the target by default. If target is invalid, throw an error
+# no matter what. Supported values for the target variable are `qemu` and
+# `arietta`.
+#
+# The following variables are modified or created based on the target:
+# BUILD_DIR: modified based on target.
+# CC: path to C compiler.
+# OVERLAY_DIRECTORY: modified based on target.
+ifndef target
+    CC = gcc
+else
 ifeq ($(target), qemu)
     BUILD_DIR := $(BUILD_DIR)/qemu
+    CC = arm-buildroot-linux-uclibcgnueabi-cc
     OVERLAY_DIR := $(OVERLAY_DIR)/qemu/overlay
 
     # Add directory containing compiler to PATH.
@@ -34,9 +43,6 @@ ifeq ($(target), qemu)
 else
 ifeq ($(target), arietta)
     $(error target arietta is not currently supported)
-else
-ifdef target
-    $(error target must be set to qemu or arietta)
 else
 ifeq ($(filter $(MAKECMDGOALS), clean clean_tree),)
     $(error target must be specified)
@@ -48,13 +54,17 @@ endif
 # Check if the mode variable was set on the command line. If not, throw an error
 # unless a goal that does not require a mode was called. If mode is invalid,
 # throw an error no matter what.
+#
+# The following variables are modified based on the release mode:
+# BUILD_DIR
+# CFLAGS
 ifeq ($(mode), release)
-    CFLAGS += $(RELEASE_CFLAGS)
     BUILD_DIR := $(BUILD_DIR)/release
+    CFLAGS += $(RELEASE_CFLAGS)
 else
 ifeq ($(mode), debug)
-    CFLAGS += $(DEBUG_CFLAGS)
     BUILD_DIR := $(BUILD_DIR)/debug
+    CFLAGS += $(DEBUG_CFLAGS)
 else
 ifdef mode
     $(error mode must be set to release or debug)
@@ -74,10 +84,14 @@ test: $(foreach pkg, $(PACKAGES), $(pkg)_test)
 
 # Build the embedded Linux OS with external tree.
 build:
+ifndef target
+	$(error target must be specified)
+else
 ifeq ($(target), qemu)
 	make BR2_EXTERNAL=$(shell pwd)/ext-tree \
 		O=$(shell echo ~)/buildroot-qemu sc_qemu_defconfig -C buildroot
 	make -C $(shell echo ~)/buildroot-qemu
+endif
 endif
 
 # Call the clean goal in each package makefile and removes the overlay
