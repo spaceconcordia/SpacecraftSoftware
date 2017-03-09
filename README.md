@@ -18,12 +18,15 @@ own README, Makefile, .gitignore, and unit tests.
 
 To build the packages, run the command `make target=<target> mode=<mode>`, where
 target can be either `qemu` or `arietta` and mode can be either `debug` or
-`release`. To build the unit tests, run the command `make target=<target>
-mode=<mode> test`. (Presently this does not work as the unit testing framework
-has yet to be integrated with the toolchain.) If the target is not specified,
-the packages are built for the local machine; consequently, the Linux OS need
-not be built nor should the emulator be run. In this case, package executables
-will be found in their associated project directory.
+`release`. If the target is not specified, the packages are built for the local
+machine; consequently, the Linux OS need not be built nor should the emulator
+be run. In this case, package executables will be found in their associated
+project directory.
+
+To build unit tests, run the command `make mode=<mode> test`. Unit tests can
+only be built when targeting the local machine. (This might change in the
+future.) The unit test executable will be found in the packages' project
+directory.
 
 Finally, to build the Linux OS, run the command `make target=<target> build`.
 This step requires that the target be specified. **Note that you should run
