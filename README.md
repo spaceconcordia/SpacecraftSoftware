@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/spaceconcordia/SpacecraftSoftware.svg?branch=master)](https://travis-ci.org/spaceconcordia/SpacecraftSoftware)
+
 # Spacecraft Software
 
 ## Development Guide
