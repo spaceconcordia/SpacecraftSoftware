@@ -1,2 +1,10 @@
 *.swp
 ext-tree/board/
+
+# backup text files
+*.un~
+*~
+
+# executables
+# for now these need to be explicitly noted for EACH ONE
+hello/hello

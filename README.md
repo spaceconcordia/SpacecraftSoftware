@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/spaceconcordia/SpacecraftSoftware.svg?branch=master)](https://travis-ci.org/spaceconcordia/SpacecraftSoftware)
+
 # Spacecraft Software
 
 ## Development Guide
@@ -8,7 +10,8 @@ The `buildroot` directory contains source code to compile an embedded Linux OS.
 This directory should remain unchanged and you do not need to concern yourself
 with it. The `ext-tree` directory contains the project-specific configurations
 for Buildroot. It contains, among other things, the project executables which
-will be placed in the root filesystem. `qemu.sh` launches the Qemu emulator.
+will be placed in the root filesystem if not building locally.`qemu.sh` 
+launches the Qemu emulator.
 
 The remaining directories contain the project "packages" i.e. the source code to
 compile the project's libraries and executables. `hello` is an example package
@@ -28,16 +31,24 @@ only be built when targeting the local machine. (This might change in the
 future.) The unit test executable will be found in the packages' project
 directory.
 
-Finally, to build the Linux OS, run the command `make target=<target> build`.
-This step requires that the target be specified. **Note that you should run
-this command before building any packages if you are not compiling for the
-local machine.** (This is a bug that should be fixed soon.) Furthermore,
+To build the packages for testing in qemu or arietta, it is first necessary 
+to build the Linux OS. To do this, `make target=<target> build`.
+This step requires that the target be specified. Furthermore,
 **note that it will take approximately one hour to build the OS.** Subsequent
 invokations of `make` will not need to rebuild the entire OS and so will take
 much less time. Further note that the build output will be in your home
 directory. This is because most developers will be compiling this project in a
 shared folder inside our Vagrant environment, and the Linux kernel cannot be
 built in a shared folder.
+
+After building the Linux kernel, it is possible to build the rest of the
+packages for qemu or arietta. Run the command
+`make target=<target> mode=<mode>`, where
+target can be either `qemu` or `arietta` and mode can be either `debug` or
+`release`. To build the unit tests, run the command `make target=<target>
+mode=<mode> test`. (Presently this does not work as the unit testing framework
+has yet to be integrated with the toolchain.) In this case, project executables
+will be found in the `ext-tree` directory.
 
 To run the emulator, simply execute the `qemu.sh` script with `./qemu.sh`. After
 some generic boot messages, you will be prompter for login information. The

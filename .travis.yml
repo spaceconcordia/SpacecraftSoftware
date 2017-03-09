@@ -1,0 +1,4 @@
+language: c
+script:
+        - make mode=debug
+        - make mode=release
