@@ -1,7 +1,33 @@
 language: c
+addons:
+	apt:
+		packages:
+			- bc
+			- binutils-arm-linux-gnueabi
+			- build-essential
+			- check
+			- clang
+			- clang-format
+			- clang-tidy
+			- cmake
+			- g++-arm-linux-gnueabi
+			- gcc-arm-linux-gnueabi
+			- libc6-armel-cross
+			- libc6-dev-armel-cross
+			- liblz4-tool
+			- libncurses5-dev
+			- libncursesw5-dev
+			- linux-tools-common
+			- linux-tools-generic
+			- qemu
+			- tmux
+			- unzip
+			- valgrind
+			- vim
+			- zip
 script:
-        - make mode=debug
-        - make mode=release
-        - make target=qemu build
-        - make target=qemu mode=debug
-        - make target=qemu mode=release
+	- make mode=debug
+	- make mode=release
+	- make target=qemu build
+	- make target=qemu mode=debug
+	- make target=qemu mode=release
