@@ -11,15 +11,18 @@ PACKAGES = hello
 #
 # BUILD_DIR: directory to place object files. relative to *package* directory.
 # OVERLAY_DIR: directory containing the root filesystem overlay.
-# CC: path to C compiler.
 # CFLAGS: flags to use with C compiler.
+# CXX: path to C++ compiler.
 # RELEASE_CFLAGS: additional flags to use with C compiler in release mode.
 # DEBUG_CFLAGS: additional flags to use with C compiler in debug mode.
+# TEST_FLAGS: flags to use when building unit tests.
 BUILD_DIR = build
 OVERLAY_DIR = ext-tree/board
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
+TEST_FLAGS = -std=c++11 -g
+TEST_LD_FLAGS = -lgtest -lgtest_main -pthread
 
 # Check if the `target` variable was set on the command line. If not, local
 # machine becomes the target by default. If target is invalid, throw an error
@@ -29,9 +32,11 @@ DEBUG_CFLAGS = -g
 # The following variables are modified or created based on the target:
 # BUILD_DIR: modified based on target.
 # CC: path to C compiler.
+# CXX: path to C++ compiler.
 # OVERLAY_DIRECTORY: modified based on target.
 ifndef target
     CC = gcc
+    CXX = g++
 else
 ifeq ($(target), qemu)
     BUILD_DIR := $(BUILD_DIR)/qemu
@@ -76,7 +81,7 @@ endif
 endif
 endif
 
-.PHONY = all build clean clean_tree
+.PHONY = all build clean clean_tree test
 
 all: $(PACKAGES)
 
