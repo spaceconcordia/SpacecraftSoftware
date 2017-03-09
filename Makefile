@@ -88,9 +88,9 @@ ifndef target
 	$(error target must be specified)
 else
 ifeq ($(target), qemu)
-	make --silent BR2_EXTERNAL=$(shell pwd)/ext-tree \
+	make BR2_EXTERNAL=$(shell pwd)/ext-tree \
 		O=$(shell echo ~)/buildroot-qemu sc_qemu_defconfig -C buildroot
-	make --silent -C $(shell echo ~)/buildroot-qemu
+	make -C $(shell echo ~)/buildroot-qemu
 endif
 endif
 

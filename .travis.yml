@@ -22,7 +22,7 @@ addons:
 script:
     - make mode=debug
     - make mode=release
-    - make target=qemu build
+    - make target=qemu build --silent
     - make target=qemu mode=debug
     - make target=qemu mode=release
 
