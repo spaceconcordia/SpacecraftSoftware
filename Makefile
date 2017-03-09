@@ -85,7 +85,11 @@ endif
 
 all: $(PACKAGES)
 
-test: $(foreach pkg, $(PACKAGES), $(pkg)_test)
+# Only include test goal if building locally. Unit tests on other targets are
+# not presently supported.
+ifndef target
+    test: $(foreach pkg, $(PACKAGES), $(pkg)_test)
+endif
 
 # Build the embedded Linux OS with external tree.
 build:
