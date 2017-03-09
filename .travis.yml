@@ -1,4 +1,4 @@
-language: c
+language: cpp
 script:
         - make mode=debug
         - make mode=debug test
