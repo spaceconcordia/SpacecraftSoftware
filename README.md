@@ -19,13 +19,17 @@ to help you understand the development environment. If you enter the `hello`
 directory, you will see that each package is a self-contained project, with its
 own README, Makefile, .gitignore, and unit tests.
 
-To build the packages locally, run the command `make mode=<mode>`, where mode
-can be either `debug` or `release`. To build the unit tests, run the command
-`make target=<target> mode=<mode> test`. (Presently this does not work as the unit testing framework
-has yet to be integrated with the toolchain.) If the target is not specified,
-the packages are built for the local machine; consequently, the Linux OS need
-not be built nor should the emulator be run. In this case, package executables
-will be found in their associated project directory.
+To build the packages, run the command `make target=<target> mode=<mode>`, where
+target can be either `qemu` or `arietta` and mode can be either `debug` or
+`release`. If the target is not specified, the packages are built for the local
+machine; consequently, the Linux OS need not be built nor should the emulator
+be run. In this case, package executables will be found in their associated
+project directory.
+
+To build unit tests, run the command `make mode=<mode> test`. Unit tests can
+only be built when targeting the local machine. (This might change in the
+future.) The unit test executable will be found in the packages' project
+directory.
 
 To build the packages for testing in qemu or arietta, it is first necessary 
 to build the Linux OS. To do this, `make target=<target> build`.
