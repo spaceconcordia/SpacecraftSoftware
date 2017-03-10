@@ -65,7 +65,7 @@ $(SLIB): $(SRC_OBJS)
 	@mkdir -p $(@D)
 	ar rcs $@ $^
 
-$(TEST_EXE): $(TEST_OBJS) $(SRC_OBJS)
+$(TEST_EXE): $(TEST_OBJS) $(SRC_OBJS) $(GTEST_BUILD_DIR)/gtest_main.a
 	@mkdir -p $(@D)
 	$(CXX) $(TEST_FLAGS) -o $@ $^ $(TEST_LD_FLAGS)
 
@@ -73,7 +73,7 @@ $(PKG_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(PKG_BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp
+$(PKG_BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp $(GTEST_HEADERS)
 	@mkdir -p $(@D)
 	$(CXX) $(TEST_FLAGS) -I$(SRC_DIR) -c -o $@ $<
 
