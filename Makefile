@@ -11,15 +11,17 @@ PACKAGES = hello
 #
 # BUILD_DIR: directory to place object files. relative to *package* directory.
 # OVERLAY_DIR: directory containing the root filesystem overlay.
-# CC: path to C compiler.
 # CFLAGS: flags to use with C compiler.
 # RELEASE_CFLAGS: additional flags to use with C compiler in release mode.
 # DEBUG_CFLAGS: additional flags to use with C compiler in debug mode.
+# TEST_FLAGS: flags to use when building unit tests.
 BUILD_DIR = build
 OVERLAY_DIR = ext-tree/board
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
+TEST_FLAGS = -std=c++11 -g -I$(GTEST_DIR) -I$(GTEST_DIR)/include
+TEST_LD_FLAGS = -pthread
 
 # Check if the `target` variable was set on the command line. If not, local
 # machine becomes the target by default. If target is invalid, throw an error
@@ -29,9 +31,11 @@ DEBUG_CFLAGS = -g
 # The following variables are modified or created based on the target:
 # BUILD_DIR: modified based on target.
 # CC: path to C compiler.
+# CXX: path to C++ compiler.
 # OVERLAY_DIRECTORY: modified based on target.
 ifndef target
     CC = gcc
+    CXX = g++
 else
 ifeq ($(target), qemu)
     BUILD_DIR := $(BUILD_DIR)/qemu
@@ -76,11 +80,15 @@ endif
 endif
 endif
 
-.PHONY = all build clean clean_tree
+.PHONY = all build clean clean_tree test
 
 all: $(PACKAGES)
 
-test: $(foreach pkg, $(PACKAGES), $(pkg)_test)
+# Only include test goal if building locally. Unit tests on other targets are
+# not presently supported.
+ifndef target
+    test: $(foreach pkg, $(PACKAGES), $(pkg)_test)
+endif
 
 # Build the embedded Linux OS with external tree.
 build:
@@ -94,13 +102,14 @@ ifeq ($(target), qemu)
 endif
 endif
 
-# Call the clean goal in each package makefile and removes the overlay
-# directory.
-clean: $(foreach pkg, $(PACKAGES), $(pkg)_clean) clean_tree
+# Call the clean goal in each package makefile, remove the overlay directory,
+# and remove the Google Test build directory.
+clean: $(foreach pkg, $(PACKAGES), $(pkg)_clean) clean_tree gtest_clean
 
 # Remove the overlay directory.
 clean_tree:
 	@if [ -d $(OVERLAY_DIR) ]; then rm -r $(OVERLAY_DIR); fi
 
-# Include makefiles from each package.
+# Include makefile for building Google Test and makefiles from each package.
+include common/googletest.mk
 include $(foreach pkg, $(PACKAGES), $(pkg)/$(pkg).mk)
