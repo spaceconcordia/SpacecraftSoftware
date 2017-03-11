@@ -1,3 +1,6 @@
+dist: trusty
+sudo: false
+
 language: c
 addons:
     apt:
@@ -21,8 +24,6 @@ addons:
             - zip
 script:
     - make mode=debug
+    - make mode=debug test
     - make mode=release
-    - make target=qemu build --silent
-    - make target=qemu mode=debug
-    - make target=qemu mode=release
-
+    - make mode=release test
