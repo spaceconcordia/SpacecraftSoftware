@@ -80,7 +80,7 @@ endif
 endif
 endif
 
-.PHONY = all build clean clean_tree test
+.PHONY = all build clean clean_tree test check
 
 all: $(PACKAGES)
 
@@ -88,6 +88,9 @@ all: $(PACKAGES)
 # not presently supported.
 ifndef target
     test: $(foreach pkg, $(PACKAGES), $(pkg)_test)
+		for pkg in $(PACKAGES); do \
+			./$$pkg/$$pkg-test; \
+		done
 endif
 
 # Build the embedded Linux OS with external tree.
