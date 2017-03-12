@@ -21,6 +21,8 @@ TEST_EXE = $(PKG_NAME)/$(PKG_NAME)-test
 PKG_BUILD_DIR = $(PKG_NAME)/$(BUILD_DIR)
 
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
+# Exclude $(PKG_NAME).c from source files if this is an executable. This helps
+# prevent multiple main functions from being compiled when building unit tests.
 ifeq ($(PKG_TYPE), exec)
     SRC_FILES := $(filter-out $(SRC_DIR)/$(PKG_NAME).c, $(SRC_FILES))
 endif
