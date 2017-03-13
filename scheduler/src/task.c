@@ -1,7 +1,7 @@
 #include "task.h"
 
 struct task {
-  id : int,
-  priority : int,
-  task_type : TASK_TYPE
+  int id;
+  int priority;
+  enum TASK_TYPE task_type;
 };
