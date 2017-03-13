@@ -20,8 +20,9 @@ OVERLAY_DIR = ext-tree/board
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
+COVERAGE_CFLAGS = -fprofile-arcs -ftest-coverage
 TEST_FLAGS = -std=c++11 -g -I$(GTEST_DIR) -I$(GTEST_DIR)/include
-TEST_LD_FLAGS = -pthread
+TEST_LD_FLAGS = -pthread -lgcov --coverage
 
 # Check if the `target` variable was set on the command line. If not, local
 # machine becomes the target by default. If target is invalid, throw an error
@@ -80,15 +81,27 @@ endif
 endif
 endif
 
-.PHONY = all build clean clean_tree test
+# Only include coverage flags only when debug and not tests
+ifeq ($(mode), debug)
+ifeq ($(filter $(MAKECMDGOALS), test),)
+	CFLAGS += $(COVERAGE_CFLAGS)
+endif
+endif
+
+.PHONY = all build clean clean_tree test check
 
 all: $(PACKAGES)
+
 
 # Only include test goal if building locally. Unit tests on other targets are
 # not presently supported.
 ifndef target
     test: $(foreach pkg, $(PACKAGES), $(pkg)_test)
+		for pkg in $(PACKAGES); do \
+			./$$pkg/$$pkg-test; \
+		done
 endif
+
 
 # Build the embedded Linux OS with external tree.
 build:

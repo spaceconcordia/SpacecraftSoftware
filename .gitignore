@@ -8,3 +8,7 @@ ext-tree/board/
 # executables
 # for now these need to be explicitly noted for EACH ONE
 hello/hello
+
+# test coverage files
+*.gcno
+*.gcda

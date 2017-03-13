@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/spaceconcordia/SpacecraftSoftware.svg?branch=master)](https://travis-ci.org/spaceconcordia/SpacecraftSoftware)
+[![Build Status](https://travis-ci.org/spaceconcordia/SpacecraftSoftware.svg?branch=master)](https://travis-ci.org/spaceconcordia/SpacecraftSoftware) [![Coverage Status](https://coveralls.io/repos/github/spaceconcordia/SpacecraftSoftware/badge.svg)](https://coveralls.io/github/spaceconcordia/SpacecraftSoftware)
 
 # Spacecraft Software
 
