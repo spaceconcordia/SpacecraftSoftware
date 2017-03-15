@@ -74,7 +74,7 @@ else
 ifdef mode
     $(error mode must be set to release or debug)
 else
-ifeq ($(filter $(MAKECMDGOALS), build clean clean_tree),)
+ifeq ($(filter $(MAKECMDGOALS), build clean clean_tree format),)
     $(error mode must be specified)
 endif
 endif
@@ -88,10 +88,9 @@ ifeq ($(filter $(MAKECMDGOALS), test),)
 endif
 endif
 
-.PHONY = all build clean clean_tree test check
+.PHONY = all build check clean clean_tree format test
 
 all: $(PACKAGES)
-
 
 # Only include test goal if building locally. Unit tests on other targets are
 # not presently supported.
@@ -122,6 +121,10 @@ clean: $(foreach pkg, $(PACKAGES), $(pkg)_clean) clean_tree gtest_clean
 # Remove the overlay directory.
 clean_tree:
 	@if [ -d $(OVERLAY_DIR) ]; then rm -r $(OVERLAY_DIR); fi
+
+# Format the C and C++ source code with clang-format.
+format:
+	@git diff -U0 HEAD^ | scripts/clang-format-diff.py -i -p1
 
 # Include makefile for building Google Test and makefiles from each package.
 include common/googletest.mk
