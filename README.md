@@ -50,8 +50,8 @@ mode=<mode> test`. (Presently this does not work as the unit testing framework
 has yet to be integrated with the toolchain.) In this case, project executables
 will be found in the `ext-tree` directory.
 
-To run the emulator, simply execute the `qemu.sh` script with `./qemu.sh`. After
-some generic boot messages, you will be prompter for login information. The
+To run the emulator, simply execute the `qemu.sh` script with `scripts/qemu.sh`. After
+some generic boot messages, you will be prompted for login information. The
 login name is `root` with no password. The project packages, such as `hello`,
 can be found in various locations of the OS e.g. `hello` will be in `/usr/bin`.
 
