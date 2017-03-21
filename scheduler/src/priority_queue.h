@@ -17,7 +17,7 @@ struct task pop_task(struct priority_queue* p_q);
 
 bool increase_priority(struct priority_queue* p_q, struct task* t_p, enum task_priority new_priority);
 
-bool clear_priority_queue(struct priority_queue* p_q);
+void clear_priority_queue(struct priority_queue* p_q);
 
 bool kill_task(struct priority_queue* p_q, struct task* t_p);
 
