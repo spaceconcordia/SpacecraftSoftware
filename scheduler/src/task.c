@@ -3,7 +3,7 @@
 
 struct task {
   int id;
-  int priority;
+  enum task_priority priority;
   time_t creation_time;
-  enum TASK_TYPE task_type;
+  enum task_type type;
 };
