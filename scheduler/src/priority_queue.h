@@ -21,6 +21,6 @@ bool clear_priority_queue(struct priority_queue* p_q);
 
 bool kill_task(struct priority_queue* p_q, struct task* t_p);
 
-bool kill_priority_queue(struct priority_queue* p_q);
+void kill_priority_queue(struct priority_queue* p_q);
 
 #endif
