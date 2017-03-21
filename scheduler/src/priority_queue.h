@@ -11,7 +11,7 @@ struct priority_queue init_priority_queue(size_t capacity);
 
 bool insert_task(struct priority_queue* p_q, struct task tsk);
 
-struct task top_task(const struct priority_queue* p_q);
+bool top_task(const struct priority_queue* p_q, struct task* t);
 
 struct task pop_task(struct priority_queue* p_q);
 
