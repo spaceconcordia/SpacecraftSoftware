@@ -6,5 +6,4 @@
 
 bool retrieve_logfile(int log_id, char* buffer, size_t buffer_size);
 
-
 #endif
