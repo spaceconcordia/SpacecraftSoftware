@@ -1,5 +1,7 @@
 #include "priority_queue.h"
+#include <stdbool.h>
 
+bool is_lower_priority(struct task current, struct task other);
 void max_heapify(struct priority_queue* p_q, size_t node_index);
 
 struct priority_queue {
@@ -21,8 +23,7 @@ bool top_task(const struct priority_queue* p_q, struct task* t) {
     *t = p_q->array[0];
     return true;
   }
-  else
-    return false;
+  else return false;
 }
 
 void clear_priority_queue(struct priority_queue* p_q) {
@@ -34,6 +35,14 @@ void kill_priority_queue(struct priority_queue* p_q) {
   p_q->array = NULL;
   p_q->capacity = 0;
   p_q->size = 0;
+}
+
+bool is_lower_priority(struct task current, struct task other){
+  if (current.priority == other.priority){
+    return (current.creation_time < other.creation_time);
+  } else {
+    return (current.priority < other.priority);
+  }
 }
 
 void max_heapify(struct priority_queue* p_q, size_t node_index) {
