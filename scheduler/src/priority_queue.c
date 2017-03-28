@@ -37,11 +37,9 @@ void kill_priority_queue(struct priority_queue* p_q) {
 }
 
 bool is_lower_priority(struct task current, struct task other){
-  if (current.creation_time == other.creation_time){
-    return (current.priority < other.priority);
-  } else if (current.creation_time > other.creation_time){
-    return false;
+  if (current.priority == other.priority){
+    return (current.creation_time < other.creation_time);
   } else {
-    return true;
+    return (current.priority < other.priority);
   }
 }
