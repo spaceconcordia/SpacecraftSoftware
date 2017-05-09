@@ -74,7 +74,7 @@ else
 ifdef mode
     $(error mode must be set to release or debug)
 else
-ifeq ($(filter $(MAKECMDGOALS), build clean clean_tree),)
+ifeq ($(filter $(MAKECMDGOALS), build clean clean_tree format),)
     $(error mode must be specified)
 endif
 endif
@@ -88,10 +88,9 @@ ifeq ($(filter $(MAKECMDGOALS), test),)
 endif
 endif
 
-.PHONY = all build clean clean_tree test check
+.PHONY = all build check clean clean_tree format test
 
 all: $(PACKAGES)
-
 
 # Only include test goal if building locally. Unit tests on other targets are
 # not presently supported.
