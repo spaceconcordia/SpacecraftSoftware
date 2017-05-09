@@ -122,10 +122,6 @@ clean: $(foreach pkg, $(PACKAGES), $(pkg)_clean) clean_tree gtest_clean
 clean_tree:
 	@if [ -d $(OVERLAY_DIR) ]; then rm -r $(OVERLAY_DIR); fi
 
-# Format the C and C++ source code with clang-format.
-format:
-	@git diff -U0 HEAD^ | scripts/clang-format-diff.py -i -p1
-
 # Include makefile for building Google Test and makefiles from each package.
 include common/googletest.mk
 include $(foreach pkg, $(PACKAGES), $(pkg)/$(pkg).mk)
