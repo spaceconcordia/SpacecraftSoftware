@@ -65,6 +65,21 @@ void clear_priority_queue(struct priority_queue* p_q) {
   p_q->size = 0;
 }
 
+bool kill_task(struct priority_queue* p_q, int task_id) {
+  size_t i = 0;
+  for (; i < p_q->size; i++) {
+    if (p_q->array[i].id == task_id) {
+        break;
+    }
+    return false;
+  }
+  p_q->array[i].task_priority = LOW;
+  p_q->array[i].creation_time = MAX_TIME;
+  max_heapify(p_q, i);
+  p_q->size--;
+  return true;
+}
+
 void kill_priority_queue(struct priority_queue* p_q) {
   free(p_q->array);
   p_q->array = NULL;
