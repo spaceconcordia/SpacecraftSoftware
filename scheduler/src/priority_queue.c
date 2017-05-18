@@ -39,6 +39,14 @@ bool top_task(const struct priority_queue* p_q, struct task* t) {
   else return false;
 }
 
+bool pop_task(struct priority_queue* p_q, struct task* t) {
+  if (p_q->size != 0) {
+    *t = p_q->array[0];
+    return kill_task(p_q, p_q->array[0].task_id);
+  }
+  else return false;
+}
+
 bool increase_priority(struct priority_queue* p_q, int task_id, enum task_priority new_priority) {
   size_t i = 0;
   for (; i < p_q->size; i++) {
