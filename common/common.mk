@@ -73,7 +73,7 @@ $(TEST_EXE): $(TEST_OBJS) $(SRC_OBJS) $(GTEST_BUILD_DIR)/gtest_main.a
 
 $(PKG_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $< $(LDFLAGS)
 
 $(PKG_BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp $(GTEST_HEADERS)
 	@mkdir -p $(@D)
