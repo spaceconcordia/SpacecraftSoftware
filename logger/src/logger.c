@@ -1,6 +1,4 @@
 #include <stdio.h>
 #include "logger.h"
 
-int main() {
-    printf("1 + 1 = 2");
-}
+typedef int make_iso_compilers_happy;

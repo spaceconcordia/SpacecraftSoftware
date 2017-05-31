@@ -18,7 +18,6 @@ PACKAGES = hello logger
 BUILD_DIR = build
 OVERLAY_DIR = ext-tree/board
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
-LOADLIBES = -lsqlite3
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
 COVERAGE_CFLAGS = -fprofile-arcs -ftest-coverage
