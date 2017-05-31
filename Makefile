@@ -30,7 +30,8 @@ TEST_LD_FLAGS = -pthread -lgcov --coverage
 
 # Check if the `target` variable was set on the command line. If not, local
 # machine becomes the target by default. If target is invalid, throw an error
-# no matter what. Presently the only supported value for target is `arietta`.
+# no matter what. Presently the supported values for target are `arietta` and
+# `arietta-wifi`.
 #
 # The following variables are modified or created based on the target:
 # BUILD_DIR: modified based on target.
@@ -41,11 +42,11 @@ ifndef target
     CC = gcc
     CXX = g++
 else
-ifeq ($(target), arietta)
-    BUILD_DIR := $(BUILD_DIR)/arietta
-    BUILDROOT_DIR := $(BUILDROOT_DIR)/arietta
+ifeq ($(target), $(filter $(target), arietta arietta-wifi))
+    BUILD_DIR := $(BUILD_DIR)/$(target)
+    BUILDROOT_DIR := $(BUILDROOT_DIR)/$(target)
     CC = arm-none-linux-gnueabi-gcc
-    OVERLAY_DIR := $(OVERLAY_DIR)/arietta/overlay
+    OVERLAY_DIR := $(OVERLAY_DIR)/$(target)/overlay
 
     # Prepend directory containing compiler to PATH.
     export PATH := $(BUILDROOT_DIR)/output/host/usr/bin:$(PATH)
@@ -111,6 +112,12 @@ ifeq ($(target), arietta)
 	make BR2_EXTERNAL=$(shell pwd)/ext-tree acme-arietta_defconfig \
 		-C $(BUILDROOT_DIR)
 	make -C $(BUILDROOT_DIR)
+else
+ifeq ($(target), arietta-wifi)
+	make BR2_EXTERNAL=$(shell pwd)/ext-tree acme-arietta-wifi_defconfig \
+		-C $(BUILDROOT_DIR)
+	make -C $(BUILDROOT_DIR)
+endif
 endif
 endif
 
