@@ -23,7 +23,6 @@ DEBUG_CFLAGS = -g
 COVERAGE_CFLAGS = -fprofile-arcs -ftest-coverage
 TEST_FLAGS = -std=c++11 -g -I$(GTEST_DIR) -I$(GTEST_DIR)/include
 TEST_LD_FLAGS = -pthread -lgcov --coverage
-LDFLAGS = -lsqlite3
 
 # Check if the `target` variable was set on the command line. If not, local
 # machine becomes the target by default. If target is invalid, throw an error
