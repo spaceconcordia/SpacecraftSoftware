@@ -109,11 +109,13 @@ ifndef target
 	$(error target must be specified)
 else
 ifeq ($(target), arietta)
+	@mkdir -p $(OVERLAY_DIR)
 	make BR2_EXTERNAL=$(shell pwd)/ext-tree sc_arietta_defconfig \
 		-C $(BUILDROOT_DIR)
 	make -C $(BUILDROOT_DIR)
 else
 ifeq ($(target), arietta-wifi)
+	@mkdir -p $(OVERLAY_DIR)
 	make BR2_EXTERNAL=$(shell pwd)/ext-tree sc_arietta-wifi_defconfig \
 		-C $(BUILDROOT_DIR)
 	make -C $(BUILDROOT_DIR)
