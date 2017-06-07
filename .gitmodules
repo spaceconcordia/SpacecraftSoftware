@@ -1,6 +1,3 @@
-[submodule "buildroot"]
-	path = buildroot
-	url = https://github.com/spaceconcordia/buildroot
 [submodule "googletest"]
 	path = googletest
 	url = https://github.com/google/googletest
