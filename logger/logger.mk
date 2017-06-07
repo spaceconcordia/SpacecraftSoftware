@@ -72,4 +72,4 @@ $(LOGGER_BUILD_DIR)/%.d: $(LOGGER_SRC_DIR)/%.c
 
 $(LOGGER_BUILD_DIR)/%.d: $(LOGGER_TEST_DIR)/%.cpp
 	@mkdir -p $(@D)
-	@
+	@$(CXX) $(TEST_FLAGS) -MM -MT $(@:.d=.o) $< > $@
