@@ -51,7 +51,7 @@ endif
 
 $(LOGGER_EXE): $(LOGGER_SRC_OBJS)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -o $@ $(LOGGER_SRC_DIR)/logger.c $^
+	$(CC) $(CFLAGS) -o $@ $(LOGGER_SRC_DIR)/logger.c $^ -lsqlite3
 
 $(LOGGER_TEST_EXE): $(LOGGER_TEST_OBJS) $(LOGGER_SRC_OBJS) $(GTEST_BUILD_DIR)/gtest_main.a
 	@mkdir -p $(@D)
