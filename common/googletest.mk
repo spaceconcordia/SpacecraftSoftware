@@ -33,4 +33,4 @@ $(GTEST_BUILD_DIR)/gtest_main.a: $(GTEST_BUILD_DIR)/gtest-all.o $(GTEST_BUILD_DI
 	ar rcs $@ $^
 
 gtest_clean:
-	@if [ -d $(GTEST_BUILD_DIR) ]; then rm -r $(GTEST_BUILD_DIR); fi
+	@rm -rf $(GTEST_BUILD_DIR)

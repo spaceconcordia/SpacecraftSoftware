@@ -92,7 +92,6 @@ endif
 
 all: $(PACKAGES)
 
-
 # Only include test goal if building locally. Unit tests on other targets are
 # not presently supported.
 ifndef target
@@ -101,7 +100,6 @@ ifndef target
 			./$$pkg/$$pkg-test; \
 		done
 endif
-
 
 # Build the embedded Linux OS with external tree.
 build:
@@ -121,7 +119,7 @@ clean: $(foreach pkg, $(PACKAGES), $(pkg)_clean) clean_tree gtest_clean
 
 # Remove the overlay directory.
 clean_tree:
-	@if [ -d $(OVERLAY_DIR) ]; then rm -r $(OVERLAY_DIR); fi
+	@rm -rf $(OVERLAY_DIR)
 
 # Include makefile for building Google Test and makefiles from each package.
 include common/googletest.mk
