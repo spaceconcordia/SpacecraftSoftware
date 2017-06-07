@@ -6,16 +6,20 @@
 PACKAGES = hello logger
 
 # These variables are used by packages when they build their targets. Note that
-# these variables will be modified based on the variables `target` and `mode`
+# these variables may be modified based on the variables `target` and `mode`
 # that are set on the command line.
 #
 # BUILD_DIR: directory to place object files. relative to *package* directory.
+# BUILDROOT_DIR: directory containing buildroot files. placed in a directory in
+#                home because Linux cannot build in a shared directory.
 # OVERLAY_DIR: directory containing the root filesystem overlay.
 # CFLAGS: flags to use with C compiler.
 # RELEASE_CFLAGS: additional flags to use with C compiler in release mode.
 # DEBUG_CFLAGS: additional flags to use with C compiler in debug mode.
 # TEST_FLAGS: flags to use when building unit tests.
+# TEST_LD_FLAGS: flags to use by linker for unit tests.
 BUILD_DIR = build
+BUILDROOT_DIR = $(shell echo ~)/buildroot
 OVERLAY_DIR = ext-tree/board
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
@@ -26,32 +30,28 @@ TEST_LD_FLAGS = -pthread -lgcov --coverage
 
 # Check if the `target` variable was set on the command line. If not, local
 # machine becomes the target by default. If target is invalid, throw an error
-# no matter what. Supported values for the target variable are `qemu` and
-# `arietta`.
+# no matter what. Presently the only supported value for target is `arietta`.
 #
 # The following variables are modified or created based on the target:
 # BUILD_DIR: modified based on target.
 # CC: path to C compiler.
 # CXX: path to C++ compiler.
-# OVERLAY_DIRECTORY: modified based on target.
+# OVERLAY_DIR: modified based on target.
 ifndef target
     CC = gcc
     CXX = g++
 else
-ifeq ($(target), qemu)
-    BUILD_DIR := $(BUILD_DIR)/qemu
-    CC = arm-buildroot-linux-uclibcgnueabi-cc
-    OVERLAY_DIR := $(OVERLAY_DIR)/qemu/overlay
-
-    # Add directory containing compiler to PATH.
-    export PATH := $(shell echo ~)/buildroot-qemu/host/usr/bin:$(PATH)
-else
 ifeq ($(target), arietta)
-    $(error target arietta is not currently supported)
+    BUILD_DIR := $(BUILD_DIR)/arietta
+    BUILDROOT_DIR := $(BUILDROOT_DIR)/arietta
+    CC = arm-none-linux-gnueabi-gcc
+    OVERLAY_DIR := $(OVERLAY_DIR)/arietta/overlay
+
+    # Prepend directory containing compiler to PATH.
+    export PATH := $(BUILDROOT_DIR)/output/host/usr/bin:$(PATH)
 else
 ifeq ($(filter $(MAKECMDGOALS), clean clean_tree),)
     $(error target must be specified)
-endif
 endif
 endif
 endif
@@ -74,7 +74,7 @@ else
 ifdef mode
     $(error mode must be set to release or debug)
 else
-ifeq ($(filter $(MAKECMDGOALS), build clean clean_tree),)
+ifeq ($(filter $(MAKECMDGOALS), build clean clean_tree format),)
     $(error mode must be specified)
 endif
 endif
@@ -88,7 +88,7 @@ ifeq ($(filter $(MAKECMDGOALS), test),)
 endif
 endif
 
-.PHONY = all build clean clean_tree test check
+.PHONY = all build clean clean_tree test
 
 all: $(PACKAGES)
 
@@ -106,10 +106,10 @@ build:
 ifndef target
 	$(error target must be specified)
 else
-ifeq ($(target), qemu)
-	make BR2_EXTERNAL=$(shell pwd)/ext-tree \
-		O=$(shell echo ~)/buildroot-qemu sc_qemu_defconfig -C buildroot
-	make -C $(shell echo ~)/buildroot-qemu
+ifeq ($(target), arietta)
+	make BR2_EXTERNAL=$(shell pwd)/ext-tree acme-arietta_defconfig \
+		-C $(BUILDROOT_DIR)
+	make -C $(BUILDROOT_DIR)
 endif
 endif
 
@@ -121,6 +121,6 @@ clean: $(foreach pkg, $(PACKAGES), $(pkg)_clean) clean_tree gtest_clean
 clean_tree:
 	@rm -rf $(OVERLAY_DIR)
 
-# Include makefile for building Google Test and makefiles from each package.
-include common/googletest.mk
+# Include makefile for building Google Test.
+include googletest.mk
 include $(foreach pkg, $(PACKAGES), $(pkg)/$(pkg).mk)
