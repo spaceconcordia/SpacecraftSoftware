@@ -16,6 +16,7 @@ PACKAGES = hello logger
 # CFLAGS: flags to use with C compiler.
 # RELEASE_CFLAGS: additional flags to use with C compiler in release mode.
 # DEBUG_CFLAGS: additional flags to use with C compiler in debug mode.
+# COVERAGE_FLAGS: flags to create test coverage files.
 # TEST_FLAGS: flags to use when building unit tests.
 # TEST_LD_FLAGS: flags to use by linker for unit tests.
 BUILD_DIR = build
@@ -96,9 +97,9 @@ all: $(PACKAGES)
 # not presently supported.
 ifndef target
     test: $(foreach pkg, $(PACKAGES), $(pkg)_test)
-		for pkg in $(PACKAGES); do \
-			./$$pkg/$$pkg-test; \
-		done
+	for pkg in $(PACKAGES); do \
+		./$$pkg/$$pkg-test; \
+	done
 endif
 
 # Build the embedded Linux OS with external tree.
