@@ -20,9 +20,6 @@ SCHEDULER_TEST_EXE = scheduler/scheduler-test
 SCHEDULER_BUILD_DIR = scheduler/$(BUILD_DIR)
 
 SCHEDULER_SRC_FILES := $(wildcard $(SCHEDULER_SRC_DIR)/*.c)
-# Exclude <pkg_name>.c from source files to prevent multiple main functions from
-# being compiled when building unit tests.
-SCHEDULER_SRC_FILES := $(filter-out $(SCHEDULER_SRC_DIR)/scheduler.c, $(SCHEDULER_SRC_FILES))
 SCHEDULER_SRC_OBJS := $(patsubst $(SCHEDULER_SRC_DIR)/%.c, $(SCHEDULER_BUILD_DIR)/%.o, $(SCHEDULER_SRC_FILES))
 
 SCHEDULER_TEST_FILES := $(wildcard $(SCHEDULER_TEST_DIR)/*.cpp)
@@ -53,7 +50,7 @@ $(SCHEDULER_EXE): $(SCHEDULER_SRC_OBJS)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ $(SCHEDULER_SRC_DIR)/scheduler.c $^
 
-$(SCHEDULER_TEST_EXE): $(SCHEDULER_TEST_OBJS) $(SCHEDULER_SRC_OBJS) $(GTEST_BUILD_DIR)/gtest_main.a
+$(SCHEDULER_TEST_EXE): $(SCHEDULER_TEST_OBJS) $(filter-out $(SCHEDULER_BUILD_DIR)/scheduler.o, $(SCHEDULER_SRC_OBJS)) $(GTEST_BUILD_DIR)/gtest_main.a
 	@mkdir -p $(@D)
 	$(CXX) $(TEST_FLAGS) -o $@ $^ $(TEST_LD_FLAGS)
 
@@ -72,4 +69,4 @@ $(SCHEDULER_BUILD_DIR)/%.d: $(SCHEDULER_SRC_DIR)/%.c
 
 $(SCHEDULER_BUILD_DIR)/%.d: $(SCHEDULER_TEST_DIR)/%.cpp
 	@mkdir -p $(@D)
-	@
+	@$(CXX) $(TEST_FLAGS) -MM -MT $(@:.d=.o) $< > $@
