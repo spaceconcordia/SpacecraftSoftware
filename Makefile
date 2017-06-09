@@ -123,5 +123,5 @@ clean_tree:
 	@rm -rf $(OVERLAY_DIR)
 
 # Include makefile for building Google Test.
-include googletest.mk
+include common/googletest.mk
 include $(foreach pkg, $(PACKAGES), $(pkg)/$(pkg).mk)
