@@ -20,9 +20,6 @@ LOGGER_TEST_EXE = logger/logger-test
 LOGGER_BUILD_DIR = logger/$(BUILD_DIR)
 
 LOGGER_SRC_FILES := $(wildcard $(LOGGER_SRC_DIR)/*.c)
-# Exclude <pkg_name>.c from source files to prevent multiple main functions from
-# being compiled when building unit tests.
-LOGGER_SRC_FILES := $(filter-out $(LOGGER_SRC_DIR)/logger.c, $(LOGGER_SRC_FILES))
 LOGGER_SRC_OBJS := $(patsubst $(LOGGER_SRC_DIR)/%.c, $(LOGGER_BUILD_DIR)/%.o, $(LOGGER_SRC_FILES))
 
 LOGGER_TEST_FILES := $(wildcard $(LOGGER_TEST_DIR)/*.cpp)
@@ -53,7 +50,7 @@ $(LOGGER_EXE): $(LOGGER_SRC_OBJS)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ $(LOGGER_SRC_DIR)/logger.c $^ -lsqlite3
 
-$(LOGGER_TEST_EXE): $(LOGGER_TEST_OBJS) $(LOGGER_SRC_OBJS) $(GTEST_BUILD_DIR)/gtest_main.a
+$(LOGGER_TEST_EXE): $(LOGGER_TEST_OBJS) $(filter-out $(LOGGER_BUILD_DIR)/logger.o, $(LOGGER_SRC_OBJS)) $(GTEST_BUILD_DIR)/gtest_main.a
 	@mkdir -p $(@D)
 	$(CXX) $(TEST_FLAGS) -o $@ $^ $(TEST_LD_FLAGS)
 
