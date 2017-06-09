@@ -22,7 +22,7 @@ HELLO_BUILD_DIR = hello/$(BUILD_DIR)
 HELLO_SRC_FILES := $(wildcard $(HELLO_SRC_DIR)/*.c)
 # Exclude <pkg_name>.c from source files to prevent multiple main functions from
 # being compiled when building unit tests.
-HELLO_SRC_FILES := $(filter-out $(HELLO_SRC_DIR)/hello.c, $(HELLO_SRC_FILES))
+#HELLO_SRC_FILES := $(filter-out $(HELLO_SRC_DIR)/hello.c, $(HELLO_SRC_FILES))
 HELLO_SRC_OBJS := $(patsubst $(HELLO_SRC_DIR)/%.c, $(HELLO_BUILD_DIR)/%.o, $(HELLO_SRC_FILES))
 
 HELLO_TEST_FILES := $(wildcard $(HELLO_TEST_DIR)/*.cpp)
@@ -51,9 +51,9 @@ endif
 
 $(HELLO_EXE): $(HELLO_SRC_OBJS)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -o $@ $(HELLO_SRC_DIR)/hello.c $^
+	$(CC) $(CFLAGS) -o $@ $^
 
-$(HELLO_TEST_EXE): $(HELLO_TEST_OBJS) $(HELLO_SRC_OBJS) $(GTEST_BUILD_DIR)/gtest_main.a
+$(HELLO_TEST_EXE): $(HELLO_TEST_OBJS) $(filter-out $(HELLO_BUILD_DIR)/hello.o, $(HELLO_SRC_OBJS)) $(GTEST_BUILD_DIR)/gtest_main.a
 	@mkdir -p $(@D)
 	$(CXX) $(TEST_FLAGS) -o $@ $^ $(TEST_LD_FLAGS)
 
