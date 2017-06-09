@@ -20,9 +20,6 @@ HELLO_TEST_EXE = hello/hello-test
 HELLO_BUILD_DIR = hello/$(BUILD_DIR)
 
 HELLO_SRC_FILES := $(wildcard $(HELLO_SRC_DIR)/*.c)
-# Exclude <pkg_name>.c from source files to prevent multiple main functions from
-# being compiled when building unit tests.
-#HELLO_SRC_FILES := $(filter-out $(HELLO_SRC_DIR)/hello.c, $(HELLO_SRC_FILES))
 HELLO_SRC_OBJS := $(patsubst $(HELLO_SRC_DIR)/%.c, $(HELLO_BUILD_DIR)/%.o, $(HELLO_SRC_FILES))
 
 HELLO_TEST_FILES := $(wildcard $(HELLO_TEST_DIR)/*.cpp)
