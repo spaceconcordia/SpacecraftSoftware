@@ -52,11 +52,11 @@ endif
 
 $(EXE): $(SRC_OBJS)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(PKG_FLAGS) -o $@ $^ $(PKG_LD_FLAGS)
+	$(CC) $(CFLAGS) $(PKG_FLAGS) -o $@ $^ $(LD_FLAGS) $(PKG_LD_FLAGS)
 
 $(TEST_EXE): $(TEST_OBJS) $(filter-out $(BUILD_DIR)/$(PKG_NAME).o, $(SRC_OBJS))
 	@mkdir -p $(@D)
-	$(CXX) $(TEST_FLAGS) -o $@ $^ $(TEST_LD_FLAGS)
+	$(CXX) $(TEST_FLAGS) -o $@ $^ $(TEST_LD_FLAGS) $(PKG_LD_FLAGS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
