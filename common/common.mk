@@ -41,6 +41,16 @@ endif
 
 .PHONY = $(PKG_NAME) $(PKG_NAME)-test $(PKG_NAME)-clean
 
+# Set the <package_name> and <package_name> targets to the executable and test
+# executable respectively *unless* they have the same name, in which case there
+# is not point and make will complain about circular dependencies.
+ifneq ($(PKG_NAME), $(EXE))
+    $(PKG_NAME): $(EXE)
+endif
+ifneq ($(PKG_NAME), $(TEST_EXE))
+    $(PKG_NAME)-test: $(TEST_EXE)
+endif
+
 # Removes the build directory containing object files, but not the executables
 # in the external tree. If the target is the local machine, then the executable
 # will appear in the project directory, in which case it is deleted as well.
