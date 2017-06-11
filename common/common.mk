@@ -19,10 +19,12 @@
 SRC_DIR = src
 # If target is not defined, place executable in package directory. Else place
 # in overlay directory.
+LOCAL_EXE_PATH = $(PKG_NAME)
+OVERLAY_EXE_PATH = ../$(OVERLAY_DIR)/$(PKG_INSTALL_DIR)/$(PKG_NAME)
 ifndef target
-    EXE = $(PKG_NAME)
+    EXE = $(LOCAL_EXE_PATH)
 else
-    EXE = $(OVERLAY_DIR)/$(PKG_INSTALL_DIR)/$(PKG_NAME)
+    EXE = $(OVERLAY_EXE_PATH)
 endif
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 SRC_OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC_FILES))
@@ -51,14 +53,10 @@ ifneq ($(PKG_NAME), $(TEST_EXE))
     $(PKG_NAME)-test: $(TEST_EXE)
 endif
 
-# Removes the build directory containing object files, but not the executables
-# in the external tree. If the target is the local machine, then the executable
-# will appear in the project directory, in which case it is deleted as well.
+# Removes the build directory containing object files and the executables.
 $(PKG_NAME)-clean:
 	rm -rf $(BUILD_DIR)
-ifndef target
 	rm -f $(EXE) $(TEST_EXE)
-endif
 
 $(EXE): $(SRC_OBJS)
 	@mkdir -p $(@D)
