@@ -57,9 +57,7 @@ ifeq ($(target), $(filter $(target), arietta arietta-wifi))
     # Prepend directory containing compiler to PATH.
     export PATH := $(BUILDROOT_DIR)/output/host/usr/bin:$(PATH)
 else
-ifeq ($(filter $(MAKECMDGOALS), clean clean-tree),)
-    $(error target must be specified)
-endif
+    $(error target must be arietta or arietta-wifi)
 endif
 endif
 
@@ -81,7 +79,7 @@ else
 ifdef mode
     $(error mode must be set to release or debug)
 else
-ifeq ($(filter $(MAKECMDGOALS), build clean clean-tree format),)
+ifeq ($(filter $(MAKECMDGOALS), build clean menuconfig nuke),)
     $(error mode must be specified)
 endif
 endif
@@ -96,7 +94,7 @@ ifeq ($(filter $(MAKECMDGOALS), test),)
 endif
 endif
 
-.PHONY = all build clean clean-tree test
+.PHONY = all build clean menuconfig nuke test
 
 all:
 	@for pkg in $(PACKAGES); do \
@@ -120,19 +118,10 @@ build:
 ifndef target
 	$(error target must be specified)
 else
-ifeq ($(target), arietta)
 	@mkdir -p $(OVERLAY_DIR)
-	make BR2_EXTERNAL=$(shell pwd)/ext-tree sc_arietta_defconfig \
+	$(MAKE) BR2_EXTERNAL=$(shell pwd)/ext-tree sc_$(target)_defconfig \
 		-C $(BUILDROOT_DIR)
-	make -C $(BUILDROOT_DIR)
-else
-ifeq ($(target), arietta-wifi)
-	@mkdir -p $(OVERLAY_DIR)
-	make BR2_EXTERNAL=$(shell pwd)/ext-tree sc_arietta-wifi_defconfig \
-		-C $(BUILDROOT_DIR)
-	make -C $(BUILDROOT_DIR)
-endif
-endif
+	$(MAKE) -C $(BUILDROOT_DIR)
 endif
 
 # Call the clean goal in each package makefile.
@@ -140,3 +129,18 @@ clean:
 	@for pkg in $(PACKAGES); do \
 		$(MAKE) -C $$pkg -f $$pkg.mk $$pkg-clean; \
 	done
+
+menuconfig:
+ifndef target
+	$(error target must be specified)
+else
+	@mkdir -p $(OVERLAY_DIR)
+	$(MAKE) BR2_EXTERNAL=$(shell pwd)/ext-tree sc_$(target)_defconfig \
+		-C $(BUILDROOT_DIR)
+	$(MAKE) -C $(BUILDROOT_DIR) menuconfig
+	$(MAKE) -C $(BUILDROOT_DIR) savedefconfig
+endif
+
+# Cleans the packages as well as the buildroot.
+nuke: clean
+	$(MAKE) -C $(BUILDROOT_DIR) distclean
