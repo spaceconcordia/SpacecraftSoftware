@@ -11,8 +11,8 @@ PACKAGES = hello
 # that are set on the command line.
 #
 # BUILD_DIR: directory to place object files. relative to *package* directory.
-# BUILDROOT_DIR: directory containing buildroot files. placed in a directory in
-#                home because Linux cannot build in a shared directory.
+# BUILDROOT_DIR: directory containing buildroot files.
+# BUILDROOT_OUTPUT_DIR: directory where buildroot files will be build.
 # OVERLAY_DIR: directory containing the root filesystem overlay.
 # CFLAGS: flags to use with C compiler.
 # RELEASE_CFLAGS: additional flags to use with C compiler in release mode.
@@ -22,8 +22,10 @@ PACKAGES = hello
 # TEST_FLAGS: flags to use when building unit tests.
 # TEST_LD_FLAGS: flags to use by linker for unit tests.
 export BUILD_DIR = build
-BUILDROOT_DIR = $(shell echo ~)/buildroot
-export OVERLAY_DIR = ext-tree/board
+BUILDROOT_DIR = $(shell echo ~)/buildroot-2017.05
+BUILDROOT_OUTPUT_DIR = $(BUILDROOT_DIR)/output
+EXT_TREE = $(shell pwd)/ext-tree
+export OVERLAY_DIR = $(EXT_TREE)/board
 export CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
@@ -34,8 +36,8 @@ export TEST_LD_FLAGS = -lgtest -lgtest_main -pthread -lgcov --coverage
 
 # Check if the `target` variable was set on the command line. If not, local
 # machine becomes the target by default. If target is invalid, throw an error
-# no matter what. Presently the supported values for target are `arietta` and
-# `arietta-wifi`.
+# no matter what. Presently the supported values for target are `arietta-128`
+# and `arietta-wifi-128`.
 #
 # The following variables are modified or created based on the target:
 # BUILD_DIR: modified based on target.
@@ -48,16 +50,16 @@ ifndef target
     export CC = gcc
     export CXX = g++
 else
-ifeq ($(target), $(filter $(target), arietta arietta-wifi))
+ifeq ($(target), $(filter $(target), arietta-128 arietta-wifi-128))
     BUILD_DIR := $(BUILD_DIR)/$(target)
-    BUILDROOT_DIR := $(BUILDROOT_DIR)/$(target)
-    CC = arm-none-linux-gnueabi-gcc
+    BUILDROOT_OUTPUT_DIR := $(BUILDROOT_OUTPUT_DIR)/$(target)
+    CC = arm-linux-cc
     OVERLAY_DIR := $(OVERLAY_DIR)/$(target)/overlay
 
     # Prepend directory containing compiler to PATH.
-    export PATH := $(BUILDROOT_DIR)/output/host/usr/bin:$(PATH)
+    export PATH := $(BUILDROOT_OUTPUT_DIR)/host/usr/bin:$(PATH)
 else
-    $(error target must be arietta or arietta-wifi)
+    $(error target must be arietta-128 or arietta-wifi-128)
 endif
 endif
 
@@ -94,7 +96,7 @@ ifeq ($(filter $(MAKECMDGOALS), test),)
 endif
 endif
 
-.PHONY = all build clean menuconfig nuke test
+.PHONY = all build clean dl-buildroot menuconfig nuke test
 
 all:
 	@for pkg in $(PACKAGES); do \
@@ -114,14 +116,14 @@ ifndef target
 endif
 
 # Build the embedded Linux OS with external tree.
-build:
+build: dl-buildroot
 ifndef target
 	$(error target must be specified)
 else
-	@mkdir -p $(OVERLAY_DIR)
-	$(MAKE) BR2_EXTERNAL=$(shell pwd)/ext-tree sc_$(target)_defconfig \
-		-C $(BUILDROOT_DIR)
-	$(MAKE) -C $(BUILDROOT_DIR)
+	@mkdir -p $(BUILDROOT_OUTPUT_DIR)
+	$(MAKE) BR2_EXTERNAL=$(EXT_TREE) sc_$(target)_defconfig \
+		-C $(BUILDROOT_DIR) O=$(BUILDROOT_OUTPUT_DIR)
+	$(MAKE) -C $(BUILDROOT_DIR) O=$(BUILDROOT_OUTPUT_DIR)
 endif
 
 # Call the clean goal in each package makefile.
@@ -130,17 +132,27 @@ clean:
 		$(MAKE) -C $$pkg -f $$pkg.mk $$pkg-clean; \
 	done
 
+# Download buildroot in the home directory.
+dl-buildroot:
+	@if [ ! -d $(BUILDROOT_DIR) ]; then \
+		cd ~; \
+		wget https://buildroot.org/downloads/buildroot-2017.05.tar.bz2; \
+		tar xjf buildroot-2017.05.tar.bz2; \
+		rm buildroot-2017.05.tar.bz2; \
+		cd; \
+	fi
+
+# Brings up an curses display for configuring the Linux system.
 menuconfig:
 ifndef target
 	$(error target must be specified)
 else
-	@mkdir -p $(OVERLAY_DIR)
-	$(MAKE) BR2_EXTERNAL=$(shell pwd)/ext-tree sc_$(target)_defconfig \
-		-C $(BUILDROOT_DIR)
-	$(MAKE) -C $(BUILDROOT_DIR) menuconfig
-	$(MAKE) -C $(BUILDROOT_DIR) savedefconfig
+	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) \
+		BR2_EXTERNAL=$(EXT_TREE) sc_$(target)_defconfig
+	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) menuconfig
+	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) savedefconfig
 endif
 
 # Cleans the packages as well as the buildroot.
 nuke: clean
-	$(MAKE) -C $(BUILDROOT_DIR) distclean
+	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) distclean

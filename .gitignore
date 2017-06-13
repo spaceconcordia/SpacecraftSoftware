@@ -7,3 +7,6 @@
 # test coverage files
 *.gcno
 *.gcda
+
+# Buildroot directory.
+buildroot-2017.05/
