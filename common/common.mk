@@ -20,7 +20,7 @@ SRC_DIR = src
 # If target is not defined, place executable in package directory. Else place
 # in overlay directory.
 LOCAL_EXE_PATH = $(PKG_NAME)
-OVERLAY_EXE_PATH = ../$(OVERLAY_DIR)/$(PKG_INSTALL_DIR)/$(PKG_NAME)
+OVERLAY_EXE_PATH = $(OVERLAY_DIR)/$(PKG_INSTALL_DIR)/$(PKG_NAME)
 ifndef target
     EXE = $(LOCAL_EXE_PATH)
 else
@@ -45,7 +45,7 @@ endif
 
 # Set the <package_name> and <package_name> targets to the executable and test
 # executable respectively *unless* they have the same name, in which case there
-# is not point and make will complain about circular dependencies.
+# is no point and make will complain about circular dependencies.
 ifneq ($(PKG_NAME), $(EXE))
     $(PKG_NAME): $(EXE)
 endif

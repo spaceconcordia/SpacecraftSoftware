@@ -53,7 +53,7 @@ else
 ifeq ($(target), $(filter $(target), arietta-128 arietta-wifi-128))
     BUILD_DIR := $(BUILD_DIR)/$(target)
     BUILDROOT_OUTPUT_DIR := $(BUILDROOT_OUTPUT_DIR)/$(target)
-    CC = arm-linux-cc
+    export CC = arm-linux-cc
     OVERLAY_DIR := $(OVERLAY_DIR)/$(target)/overlay
 
     # Prepend directory containing compiler to PATH.
