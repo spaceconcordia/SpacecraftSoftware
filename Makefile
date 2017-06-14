@@ -96,9 +96,11 @@ ifeq ($(filter $(MAKECMDGOALS), test),)
 endif
 endif
 
-.PHONY = all build clean dl-buildroot menuconfig nuke test
+.PHONY = all build clean defconfig dl-buildroot menuconfig nuke test toolchain
 
-all:
+# Build all the packages. If target is specified, the cross-compilation
+# toolchain will be built first.
+all: toolchain
 	@for pkg in $(PACKAGES); do \
 		$(MAKE) -C $$pkg -f $$pkg.mk $$pkg; \
 	done
@@ -116,13 +118,10 @@ ifndef target
 endif
 
 # Build the embedded Linux OS with external tree.
-build: dl-buildroot
+build: defconfig
 ifndef target
 	$(error target must be specified)
 else
-	@mkdir -p $(BUILDROOT_OUTPUT_DIR)
-	$(MAKE) BR2_EXTERNAL=$(EXT_TREE) sc_$(target)_defconfig \
-		-C $(BUILDROOT_DIR) O=$(BUILDROOT_OUTPUT_DIR)
 	$(MAKE) -C $(BUILDROOT_DIR) O=$(BUILDROOT_OUTPUT_DIR)
 endif
 
@@ -131,6 +130,12 @@ clean:
 	@for pkg in $(PACKAGES); do \
 		$(MAKE) -C $$pkg -f $$pkg.mk $$pkg-clean; \
 	done
+
+# Apply defconfig.
+defconfig: dl-buildroot
+	@mkdir -p $(BUILDROOT_OUTPUT_DIR)
+	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) \
+		BR2_EXTERNAL=$(EXT_TREE) sc_$(target)_defconfig
 
 # Download buildroot in the home directory.
 dl-buildroot:
@@ -143,12 +148,10 @@ dl-buildroot:
 	fi
 
 # Brings up an curses display for configuring the Linux system.
-menuconfig:
+menuconfig: defconfig
 ifndef target
 	$(error target must be specified)
 else
-	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) \
-		BR2_EXTERNAL=$(EXT_TREE) sc_$(target)_defconfig
 	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) menuconfig
 	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) savedefconfig
 endif
@@ -156,3 +159,15 @@ endif
 # Cleans the packages as well as the buildroot.
 nuke: clean
 	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) distclean
+
+# Installs and compiles the buildroot toolchain. If target is specified and
+# the toolchain is not installed (which can be verified by checking for the
+# existance of the $(BUILDROOT_OUTPUT_DIR)/host directory) then local packages
+# cannot be compiled because they won't have access to the required compiler.
+toolchain: defconfig
+ifdef target
+	@if [ ! -d $(BUILDROOT_OUTPUT_DIR)/host ]; then \
+		$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) \
+			toolchain; \
+	fi
+endif
