@@ -161,13 +161,9 @@ nuke: clean
 	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) distclean
 
 # Installs and compiles the buildroot toolchain. If target is specified and
-# the toolchain is not installed (which can be verified by checking for the
-# existance of the $(BUILDROOT_OUTPUT_DIR)/host directory) then local packages
-# cannot be compiled because they won't have access to the required compiler.
+# the toolchain is not installed then local packages cannot be compiled because
+# they won't have access to the required compiler.
 toolchain: defconfig
 ifdef target
-	@if [ ! -d $(BUILDROOT_OUTPUT_DIR)/host ]; then \
-		$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) \
-			toolchain; \
-	fi
+	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) toolchain;
 endif
