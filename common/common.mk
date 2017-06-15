@@ -1,10 +1,10 @@
-# This makefile defines variables and rules that are used by multiple packages.
+# This makefile defines variables and rules that are used to build the
+# packages.
 
 # The following variables are expected to be defined by the root makefile:
 #   BUILD_DIR
 #   OVERLAY_DIR
 #   CFLAGS
-#   LD_FLAGS
 #   TEST_FLAGS
 #   TEST_LD_FLAGS
 #   CC
@@ -34,6 +34,9 @@ TEST_EXE = $(PKG_NAME)-test
 TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 TEST_OBJS := $(patsubst $(TEST_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(TEST_FILES))
 
+# Add package specific flags.
+CFLAGS := $(CFLAGS) $(PKG_FLAGS)
+
 # Include generated makefiles containing object dependencies unless the
 # <package_name>-clean target was called.
 DEPS := $(SRC_OBJS:.o=.d)
@@ -60,7 +63,7 @@ $(PKG_NAME)-clean:
 
 $(EXE): $(SRC_OBJS)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(PKG_FLAGS) -o $@ $^ $(PKG_LD_FLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(PKG_LD_FLAGS)
 
 $(TEST_EXE): $(TEST_OBJS) $(filter-out $(BUILD_DIR)/$(PKG_NAME).o, $(SRC_OBJS))
 	@mkdir -p $(@D)

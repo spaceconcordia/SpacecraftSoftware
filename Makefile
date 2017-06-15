@@ -21,7 +21,6 @@ PACKAGES = hello
 # RELEASE_CFLAGS: additional flags to use with C compiler in release mode.
 # DEBUG_CFLAGS: additional flags to use with C compiler in debug mode.
 # COVERAGE_FLAGS: flags to create test coverage files.
-# LD_FLAGS: flags to use by the linker.
 # TEST_FLAGS: flags to use when building unit tests.
 # TEST_LD_FLAGS: flags to use by linker for unit tests.
 export BUILD_DIR_ROOT = build
@@ -34,7 +33,6 @@ export CFLAGS = -std=c99 -Wall -Wextra -pedantic -Werror
 RELEASE_CFLAGS = -O2 -s -DNDEBUG
 DEBUG_CFLAGS = -g
 COVERAGE_CFLAGS = -fprofile-arcs -ftest-coverage
-export LD_FLAGS =
 export TEST_FLAGS = -std=c++11 -g
 export TEST_LD_FLAGS = -lgtest -lgtest_main -pthread -lgcov --coverage
 
@@ -126,14 +124,15 @@ build: defconfig
 ifndef target
 	$(error target must be specified)
 else
-	$(MAKE) -C $(BUILDROOT_DIR) O=$(BUILDROOT_OUTPUT_DIR)
+	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR)
 endif
 
-# Call the clean goal in each package makefile.
+# Call the clean goal in each package makefile and remove the sdcard image.
 clean:
 	@for pkg in $(PACKAGES); do \
 		$(MAKE) -C $$pkg -f $$pkg.mk $$pkg-clean; \
 	done
+	rm -f sdcard.img
 
 # Apply defconfig.
 defconfig: dl-buildroot
