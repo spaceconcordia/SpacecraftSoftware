@@ -34,10 +34,10 @@ TEST_EXE = $(PKG_NAME)-test
 TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 TEST_OBJS := $(patsubst $(TEST_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(TEST_FILES))
 
-# Include generated makefiles containing object dependencies unless the clean
-# or build targets were specified.
+# Include generated makefiles containing object dependencies unless the
+# <package_name>-clean target was called.
 DEPS := $(SRC_OBJS:.o=.d)
-ifeq ($(filter $(MAKECMDGOALS), build clean),)
+ifneq ($(MAKECMDGOALS), $(PKG_NAME)-clean)
     -include $(DEPS)
 endif
 
@@ -55,7 +55,7 @@ endif
 
 # Removes the build directory containing object files and the executables.
 $(PKG_NAME)-clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR_ROOT)
 	rm -f $(EXE) $(TEST_EXE)
 
 $(EXE): $(SRC_OBJS)

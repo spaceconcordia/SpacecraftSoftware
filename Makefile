@@ -10,7 +10,10 @@ PACKAGES = hello
 # these variables may be modified based on the variables `target` and `mode`
 # that are set on the command line.
 #
-# BUILD_DIR: directory to place object files. relative to *package* directory.
+# BUILD_DIR_ROOT: root directory where all object files are placed. relative to
+#                 *package* directory.
+# BUILD_DIR: directory to place object files for specific target and mode.
+#            relative to *package* directory.
 # BUILDROOT_DIR: directory containing buildroot files.
 # BUILDROOT_OUTPUT_DIR: directory where buildroot files will be build.
 # OVERLAY_DIR: directory containing the root filesystem overlay.
@@ -21,7 +24,8 @@ PACKAGES = hello
 # LD_FLAGS: flags to use by the linker.
 # TEST_FLAGS: flags to use when building unit tests.
 # TEST_LD_FLAGS: flags to use by linker for unit tests.
-export BUILD_DIR = build
+export BUILD_DIR_ROOT = build
+export BUILD_DIR = $(BUILD_DIR_ROOT)
 BUILDROOT_DIR = $(shell echo ~)/buildroot-2017.05
 BUILDROOT_OUTPUT_DIR = $(BUILDROOT_DIR)/output
 EXT_TREE = $(shell pwd)/ext-tree
@@ -134,7 +138,7 @@ clean:
 # Apply defconfig.
 defconfig: dl-buildroot
 	@mkdir -p $(BUILDROOT_OUTPUT_DIR)
-	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) \
+	$(MAKE) -C $(BUILDROOT_DIR) O=$(BUILDROOT_OUTPUT_DIR) \
 		BR2_EXTERNAL=$(EXT_TREE) sc_$(target)_defconfig
 
 # Download buildroot in the home directory.
@@ -152,18 +156,18 @@ menuconfig: defconfig
 ifndef target
 	$(error target must be specified)
 else
-	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) menuconfig
-	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) savedefconfig
+	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) MENUCONFIG_COLOR=blackbg menuconfig
+	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) savedefconfig
 endif
 
 # Cleans the packages as well as the buildroot.
 nuke: clean
-	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) distclean
+	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) distclean
 
 # Installs and compiles the buildroot toolchain. If target is specified and
 # the toolchain is not installed then local packages cannot be compiled because
 # they won't have access to the required compiler.
 toolchain: defconfig
 ifdef target
-	$(MAKE) O=$(BUILDROOT_OUTPUT_DIR) -C $(BUILDROOT_DIR) toolchain;
+	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) toolchain;
 endif

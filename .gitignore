@@ -8,5 +8,5 @@
 *.gcno
 *.gcda
 
-# Buildroot directory.
-buildroot-2017.05/
+# SD card image.
+sdcard.img
