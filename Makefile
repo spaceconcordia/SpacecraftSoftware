@@ -83,7 +83,7 @@ else
 ifdef mode
     $(error mode must be set to release or debug)
 else
-ifeq ($(filter $(MAKECMDGOALS), build clean menuconfig nuke),)
+ifeq ($(filter $(MAKECMDGOALS), build clean config linux-config nuke),)
     $(error mode must be specified)
 endif
 endif
@@ -98,7 +98,8 @@ ifeq ($(filter $(MAKECMDGOALS), test),)
 endif
 endif
 
-.PHONY = all build clean defconfig dl-buildroot menuconfig nuke test toolchain
+.PHONY = all build clean config defconfig dl-buildroot linux-config nuke test \
+         toolchain
 
 # Build all the packages. If target is specified, the cross-compilation
 # toolchain will be built first.
@@ -134,6 +135,15 @@ clean:
 	done
 	rm -f sdcard.img
 
+# Brings up a curses display for configuring Buildroot.
+config: defconfig
+ifndef target
+	$(error target must be specified)
+else
+	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) menuconfig
+	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) savedefconfig
+endif
+
 # Apply defconfig.
 defconfig: dl-buildroot
 	@mkdir -p $(BUILDROOT_OUTPUT_DIR)
@@ -150,13 +160,13 @@ dl-buildroot:
 		cd; \
 	fi
 
-# Brings up an curses display for configuring the Linux system.
-menuconfig: defconfig
+# Brings up a curses display for configuring the Linux kernel.
+linux-config: defconfig
 ifndef target
 	$(error target must be specified)
 else
-	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) MENUCONFIG_COLOR=blackbg menuconfig
-	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) savedefconfig
+	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) linux-menuconfig
+	$(MAKE) -C $(BUILDROOT_OUTPUT_DIR) linux-update-defconfig
 endif
 
 # Cleans the packages as well as the buildroot.

@@ -1,0 +1,14 @@
+auto lo
+iface lo inet loopback
+
+auto usb0
+iface usb0 inet static
+  address 192.168.10.10
+  netmask 255.255.255.0
+  gateway 192.168.10.20
+
+auto wlan0
+iface wlan0 inet dhcp
+  wireless-essid any
+  pre-up wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -B 
+  post-down killall -q wpa_supplicant
