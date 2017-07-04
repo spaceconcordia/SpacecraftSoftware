@@ -6,34 +6,38 @@
 This section will provide a tour of the project's structure and the development
 workflow you can expect to follow.
 
-The `buildroot` directory contains source code to compile an embedded Linux OS.
-This directory should remain unchanged and you do not need to concern yourself
-with it. The `ext-tree` directory contains the project-specific configurations
-for Buildroot. It contains, among other things, the project executables which
-will be placed in the root filesystem if not building locally.`qemu.sh` 
-launches the Qemu emulator.
+The `common` directory contains Makefiles and other configuration files that are
+used by all of the project's packages.
+
+The `ext-tree` directory contains the project-specific configurations for
+Buildroot, the tool used to compile an embedded Linux system for the Arietta. It
+It contains, among other things, the project executables which will be placed in
+the root filesystem if not building locally.
+
+The `googletest` directory is a submodule which contains Google's unit testing
+library. It will be compiled along with any unit tests.
 
 The remaining directories contain the project "packages" i.e. the source code to
 compile the project's libraries and executables. `hello` is an example package
 to help you understand the development environment. If you enter the `hello`
 directory, you will see that each package is a self-contained project, with its
-own README, Makefile, .gitignore, and unit tests.
+own README, Makefile, .gitignore, unit tests, etc.
 
 To build the packages, run the command `make target=<target> mode=<mode>`, where
-target can be either `qemu` or `arietta` and mode can be either `debug` or
-`release`. If the target is not specified, the packages are built for the local
-machine; consequently, the Linux OS need not be built nor should the emulator
-be run. In this case, package executables will be found in their associated
+presently the only supported value of target is`arietta` and mode can be either
+`debug` or `release`. **If the target is not specified, the packages are built
+for the local machine**; consequently, the Linux OS need not be built. In this
+case, package executables will be found in their associated project directory.
+
+To build and unit tests, run the command `make mode=<mode> test`. Unit tests can
+only be built when targeting the local machine. (This might change in the
+future.) Individual the unit test executable will be found in the packages'
 project directory.
 
-To build unit tests, run the command `make mode=<mode> test`. Unit tests can
-only be built when targeting the local machine. (This might change in the
-future.) The unit test executable will be found in the packages' project
-directory.
-
-To build the packages for testing in qemu or arietta, it is first necessary 
-to build the Linux OS. To do this, `make target=<target> build`.
-This step requires that the target be specified. Furthermore,
+To build the packages for testing in the arietta, it is **first** necessary to
+build the Linux OS. To do this, `make target=<target> build`. (If you get an
+error about an ARM compiler not being found, it's probably because you forgot to
+run this command.) This step requires that the target be specified. Furthermore,
 **note that it will take approximately one hour to build the OS.** Subsequent
 invokations of `make` will not need to rebuild the entire OS and so will take
 much less time. Further note that the build output will be in your home
@@ -42,18 +46,12 @@ shared folder inside our Vagrant environment, and the Linux kernel cannot be
 built in a shared folder.
 
 After building the Linux kernel, it is possible to build the rest of the
-packages for qemu or arietta. Run the command
-`make target=<target> mode=<mode>`, where
-target can be either `qemu` or `arietta` and mode can be either `debug` or
+packages for arietta. Run the command `make target=<target> mode=<mode>`,
+where target can be either `arietta` and mode can be either `debug` or
 `release`. To build the unit tests, run the command `make target=<target>
 mode=<mode> test`. (Presently this does not work as the unit testing framework
 has yet to be integrated with the toolchain.) In this case, project executables
 will be found in the `ext-tree` directory.
-
-To run the emulator, simply execute the `qemu.sh` script with `scripts/qemu.sh`. After
-some generic boot messages, you will be prompted for login information. The
-login name is `root` with no password. The project packages, such as `hello`,
-can be found in various locations of the OS e.g. `hello` will be in `/usr/bin`.
 
 ## Git Workflow
 ### Basic Guidelines
@@ -70,7 +68,7 @@ can be found in various locations of the OS e.g. `hello` will be in `/usr/bin`.
 ### Further Reading
 [Branching workflow](https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows)
 
-##Project Links
+## Project Links
 ### Organization
 - [GitHub repository](https://github.com/spaceconcordia/SpacecraftSoftware)
 - [Project management](https://tree.taiga.io/project/slijs-spacecraft-software/)
