@@ -1,0 +1,33 @@
+1. Start the program by typing sqlite3.
+2. The command line should look like 'sqlite>'. You are now on the SQL command line.
+3. Notes:
+	ATTACH 'DatabaseName' As 'Alias-Name';
+		-Used to select which database to work on.
+	
+	.database
+		-display attached database.
+	
+	DETACH DATABASE 'Alias-Name';
+		-detach and dissociate a name from database.
+	
+	CREATE TABLE database_name.table_name(
+		column1 datatype  PRIMARY KEY(one or more columns),
+		column2 datatype,
+		column3 datatype,
+		.....
+		columnN datatype,
+	);
+		-Create a table in the database. Replace database_name.table_name with a name of your chosing.
+		
+	.tables 
+		-Lists all the tables in the attached database.
+		
+	.schema table_name
+		-Display table information. E.i.: columns, datatype, key type ...
+		
+	DROP TABLE table_name;
+		-Removes table from database. Warning: All data in table will be lost.
+		
+	
+		
+	

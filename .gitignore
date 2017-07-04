@@ -12,3 +12,6 @@ hello/hello
 # test coverage files
 *.gcno
 *.gcda
+
+# Ignore the .DS_Store file created on Macs.
+.DS_Store
