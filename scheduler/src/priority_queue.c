@@ -3,9 +3,6 @@
 
 bool is_lower_priority(struct task current, struct task other);
 void max_heapify(struct priority_queue* p_q, size_t node_index);
-int parent(size_t i);
-void siftdown(int position, struct priority_queue* p_q);
-void swapTasks(struct task* tsk1, struct task* tsk2);
 
 const int MAX_TIME = 1 << (8 * sizeof(time_t) - 1) - 1;
 
@@ -35,7 +32,7 @@ bool insert_task(struct priority_queue* p_q, struct task tsk) {
 }
 
 bool top_task(const struct priority_queue* p_q, struct task* t) {
-  if (p_q->size > 0) {
+  if (p_q->size != 0) {
     *t = p_q->array[0];
     return true;
   }
@@ -43,13 +40,10 @@ bool top_task(const struct priority_queue* p_q, struct task* t) {
 }
 
 bool pop_task(struct priority_queue* p_q, struct task* t) {
-  if (p_q->size > 0) {
-      *t = p_q->array[0];
-      swapTasks(&(p_q->array[0]), &(p_q->array[--p_q->size]));
-      if (p_q->size != 0)
-        siftdown(0, p_q);
-      return true;
-    }
+  if (p_q->size != 0) {
+    *t = p_q->array[0];
+    return kill_task(p_q, p_q->array[0].task_id);
+  }
   else return false;
 }
 
@@ -87,18 +81,11 @@ bool kill_task(struct priority_queue* p_q, int task_id) {
     }
     return false;
   }
-  if (i == p_q->size - 1)
-    p_q->size--;
-  else {
-    swapTasks(&(p_q->array[i]), &(p_q->array[p_q->size-1]));
-    while ( (i > 0) && is_lower_priority(p_q->array[parent(i)], p_q->array[i]) ) {
-      swapTasks(&(p_q->array[parent(i)]), &(p_q->array[i]));
-      i = parent(i);
-    }
-    if (p_q->size != 0)
-      siftdown(i, p_q);
-    return true;
-  }
+  p_q->array[i].task_priority = LOW;
+  p_q->array[i].creation_time = MAX_TIME;
+  max_heapify(p_q, i);
+  p_q->size--;
+  return true;
 }
 
 void kill_priority_queue(struct priority_queue* p_q) {
@@ -131,31 +118,13 @@ void max_heapify(struct priority_queue* p_q, size_t node_index) {
   }
 
   if (largest != node_index) {
-    swapTasks(&(p_q->array[node_index]), &(p_q->array[largest]));
+    struct task temp = p_q->array[node_index];
+    p_q->array[node_index] = p_q->array[largest];
+    p_q->array[largest] = temp;
     max_heapify(p_q, largest);
   }
 }
 
 int parent(size_t i) {
   return (i-1)/2;
-}
-
-void swapTasks(struct task* tsk1, struct task* tsk2) {
-  struct task temp = *tsk1;
-  *tsk1 = *tsk2;
-  *tsk2 = temp;
-}
-
-void siftdown(int position, struct priority_queue* p_q) {
-  if (position >= 0 && position < p_q->size) {
-    while (position < p_q->size/2) {
-      int bigger = 2 * position + 1;
-      if (bigger < p_q->size - 1 && is_lower_priority(p_q->array[bigger], p_q->array[bigger+1]))
-        bigger++;
-      if (is_lower_priority(p_q->array[bigger], p_q->array[position]))
-        return;
-      swapTasks(p_q->array[position], p_q->array[bigger]);
-      position = bigger;
-    }
-  }
 }
