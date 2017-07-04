@@ -54,7 +54,7 @@ bool increase_priority(struct priority_queue* p_q, int task_id, enum task_priori
 void clear_priority_queue(struct priority_queue* p_q);
 
 /*
- * Removes the task with the specified task_id from the queue. Returns truu if
+ * Removes the task with the specified task_id from the queue. Returns true if
  * successful, false if unsuccessful (for example, if the task does not exist).
  */
 bool kill_task(struct priority_queue* p_q, int task_id);
