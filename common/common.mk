@@ -1,89 +1,86 @@
-# This makefile contains variables, rules, etc. that are common to all packages.
+# This makefile defines variables and rules that are used by multiple packages.
 
-SRC_DIR = $(PKG_NAME)/src
-TEST_DIR = $(PKG_NAME)/test
+# The following variables are expected to be defined by the root makefile:
+#   BUILD_DIR
+#   OVERLAY_DIR
+#   CFLAGS
+#   LD_FLAGS
+#   TEST_FLAGS
+#   TEST_LD_FLAGS
+#   CC
+#   CXX
+#
+# The following variables are expected to be defined by the calling makefile:
+#   PKG_NAME
+#   PKG_INSTALL_DIR
+#   PKG_FLAGS (possibly empty)
+#   PKG_LD_FLAGS (possibly empty)
 
-# Set executable or library output path based on 1) the compile target, and 2)
-# the package type. Unit tests are exclusively built in the project directory.
-# Package build directory is set based on BUILD_DIR.
-ifeq ($(PKG_TYPE), exec)
+SRC_DIR = src
+# If target is not defined, place executable in package directory. Else place
+# in overlay directory.
 ifndef target
-    EXE = $(PKG_NAME)/$(PKG_NAME)
+    EXE = $(PKG_NAME)
 else
-    EXE = $(OVERLAY_DIR)/$(INSTALL_DIR)/$(PKG_NAME)
+    EXE = $(OVERLAY_DIR)/$(PKG_INSTALL_DIR)/$(PKG_NAME)
 endif
-else
-ifeq ($(PKG_TYPE), s_lib)
-    SLIB = $(PKG_NAME)/lib$(PKG_NAME).a
-endif
-endif
-TEST_EXE = $(PKG_NAME)/$(PKG_NAME)-test
-PKG_BUILD_DIR = $(PKG_NAME)/$(BUILD_DIR)
-
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
-# Exclude $(PKG_NAME).c from source files if this is an executable. This helps
-# prevent multiple main functions from being compiled when building unit tests.
-ifeq ($(PKG_TYPE), exec)
-    SRC_FILES := $(filter-out $(SRC_DIR)/$(PKG_NAME).c, $(SRC_FILES))
-endif
-SRC_OBJS := $(patsubst $(SRC_DIR)/%.c, $(PKG_BUILD_DIR)/%.o, $(SRC_FILES))
+SRC_OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC_FILES))
+
+TEST_DIR = test
+TEST_EXE = $(PKG_NAME)-test
 TEST_FILES := $(wildcard $(TEST_DIR)/*.cpp)
-TEST_OBJS := $(patsubst $(TEST_DIR)/%.cpp, $(PKG_BUILD_DIR)/%.o, $(TEST_FILES))
-DEPS := $(OBJS:.o=.d)
+TEST_OBJS := $(patsubst $(TEST_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(TEST_FILES))
 
 # Include generated makefiles containing object dependencies unless the clean
-# target was specified.
+# or build targets were specified.
+DEPS := $(SRC_OBJS:.o=.d)
 ifeq ($(filter $(MAKECMDGOALS), build clean),)
     -include $(DEPS)
 endif
 
-.PHONY += $(PKG_NAME) $(PKG_NAME)_test $(PKG_NAME)_clean
+.PHONY = $(PKG_NAME) $(PKG_NAME)-test $(PKG_NAME)-clean
 
-# Set the main goal based on the package type.
-ifeq ($(PKG_TYPE), exec)
+# Set the <package_name> and <package_name> targets to the executable and test
+# executable respectively *unless* they have the same name, in which case there
+# is not point and make will complain about circular dependencies.
+ifneq ($(PKG_NAME), $(EXE))
     $(PKG_NAME): $(EXE)
-else
-ifeq ($(PKG_TYPE), s_lib)
-    $(PKG_NAME): $(SLIB)
 endif
+ifneq ($(PKG_NAME), $(TEST_EXE))
+    $(PKG_NAME)-test: $(TEST_EXE)
 endif
-
-$(PKG_NAME)_test: $(TEST_EXE)
 
 # Removes the build directory containing object files, but not the executables
 # in the external tree. If the target is the local machine, then the executable
 # will appear in the project directory, in which case it is deleted as well.
-$(PKG_NAME)_clean:
-	@if [ -d $(PKG_BUILD_DIR) ]; then rm -r $(PKG_BUILD_DIR); fi
+$(PKG_NAME)-clean:
+	rm -rf $(BUILD_DIR)
 ifndef target
-	@rm -f $(EXE) $(SLIB) $(TEST_EXE)
+	rm -f $(EXE) $(TEST_EXE)
 endif
 
 $(EXE): $(SRC_OBJS)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -o $@ $(SRC_DIR)/$(PKG_NAME).c $^ 
+	$(CC) $(CFLAGS) $(PKG_FLAGS) -o $@ $^ $(PKG_LD_FLAGS)
 
-$(SLIB): $(SRC_OBJS)
-	@mkdir -p $(@D)
-	ar rcs $@ $^
-
-$(TEST_EXE): $(TEST_OBJS) $(SRC_OBJS) $(GTEST_BUILD_DIR)/gtest_main.a
+$(TEST_EXE): $(TEST_OBJS) $(filter-out $(BUILD_DIR)/$(PKG_NAME).o, $(SRC_OBJS))
 	@mkdir -p $(@D)
 	$(CXX) $(TEST_FLAGS) -o $@ $^ $(TEST_LD_FLAGS)
 
-$(PKG_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(PKG_BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp $(GTEST_HEADERS)
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(TEST_FLAGS) -I$(SRC_DIR) -c -o $@ $<
 
 # Automatically detect dependencies.
-$(PKG_BUILD_DIR)/%.d: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.d: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -MM -MT $(@:.d=.o) $< > $@
 
-$(PKG_BUILD_DIR)/%.d: $(TEST_DIR)/%.cpp
+$(BUILD_DIR)/%.d: $(TEST_DIR)/%.cpp
 	@mkdir -p $(@D)
 	@$(CXX) $(TEST_FLAGS) -MM -MT $(@:.d=.o) $< > $@
