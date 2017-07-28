@@ -6,7 +6,7 @@
 #include "task.h"
 
 //based on the type of the task, decides what action to take
-bool delegate_task(struct task* task, enum task_type type);
+// bool delegate_task(struct task* task, enum task_type type);
 
 //reboots the system
 void reboot();
@@ -15,7 +15,7 @@ void reboot();
 void get_time();
 
 //sends out a ping
-void ping()
+void ping();
 
 
 

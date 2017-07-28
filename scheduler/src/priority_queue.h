@@ -12,7 +12,11 @@
  *   capacity: max number of tasks that the priority queue can hold.
  *   size: number of tasks in the priority queue at a given moment.
  */
-struct priority_queue;
+ struct priority_queue {
+   struct task* array;
+   size_t capacity; //const?
+   size_t size;
+ };
 
 /*
  * Creates and returns an empty priority queue with the given capacity. Note
