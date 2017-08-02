@@ -38,6 +38,7 @@ TEST(PriorityQueueTest, PopTask) {
 TEST(PriorityQueueTest, IncreasePriority) {
   struct task tsk = create_task(0, LOW, EMPTY);
   struct priority_queue p_q = init_priority_queue(10);
+  insert_task(&p_q, tsk);
   EXPECT_EQ(increase_priority(&p_q, 0, MEDIUM), true);
   EXPECT_EQ(p_q.size, 1);
 }
@@ -45,6 +46,7 @@ TEST(PriorityQueueTest, IncreasePriority) {
 TEST(PriorityQueueTest, ClearPriorityQueue) {
   struct task tsk = create_task(0, LOW, EMPTY);
   struct priority_queue p_q = init_priority_queue(10);
+  insert_task(&p_q, tsk);
   EXPECT_EQ(p_q.size, 1);
   clear_priority_queue(&p_q);
   EXPECT_EQ(p_q.size, 0);

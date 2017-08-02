@@ -5,8 +5,9 @@
 bool is_lower_priority(struct task current, struct task other);
 void max_heapify(struct priority_queue* p_q, size_t node_index);
 int parent(size_t i);
+bool decrease_creation_time(struct priority_queue* p_q, int task_id, time_t t);
 
-const time_t MAX_TIME = ~(((time_t) 1 ) & 0);
+const time_t MAX_TIME = (time_t)((unsigned long long)(1LL << (8 * sizeof(time_t) - 1)) - 1);
 
 struct priority_queue init_priority_queue(size_t capacity) {
     struct priority_queue p_q;
@@ -24,6 +25,7 @@ bool insert_task(struct priority_queue* p_q, struct task tsk) {
     p_q->array[p_q->size - 1].priority = LOW;
     p_q->array[p_q->size - 1].creation_time = MAX_TIME;
     increase_priority(p_q, tsk.id, tsk.priority);
+    decrease_creation_time(p_q, tsk.id, tsk.creation_time);
     return true;
   }
   else return false;
@@ -51,8 +53,8 @@ bool increase_priority(struct priority_queue* p_q, int task_id, enum task_priori
     if (p_q->array[i].id == task_id) {
         break;
     }
-    return false;
   }
+  if (i == p_q->size) return false;
 
   if (new_priority > p_q->array[i].priority)
     p_q->array[i].priority = new_priority;
@@ -77,8 +79,9 @@ bool kill_task(struct priority_queue* p_q, int task_id) {
     if (p_q->array[i].id == task_id) {
         break;
     }
-    return false;
   }
+  if (i == p_q->size) return false;
+
   p_q->array[i].priority = LOW;
   p_q->array[i].creation_time = MAX_TIME;
   max_heapify(p_q, i);
@@ -125,4 +128,26 @@ void max_heapify(struct priority_queue* p_q, size_t node_index) {
 
 int parent(size_t i) {
   return (i-1)/2;
+}
+
+bool decrease_creation_time(struct priority_queue* p_q, int task_id, time_t t) {
+  size_t i = 0;
+  for (; i < p_q->size; i++) {
+    if (p_q->array[i].id == task_id) {
+        break;
+    }
+    return false;
+  }
+
+  if (t < p_q->array[i].creation_time)
+    p_q->array[i].creation_time = t;
+  else return false;
+
+  while (i > 0 && is_lower_priority(p_q->array[parent(i)], p_q->array[i])) {
+    struct task temp = p_q->array[parent(i)];
+    p_q->array[parent(i)] = p_q->array[i];
+    p_q->array[i] = temp;
+    i = parent(i);
+  }
+  return true;
 }
