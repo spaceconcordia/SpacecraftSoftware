@@ -1,9 +1,9 @@
 #ifndef SCHEDULER_PRIORITY_QUEUE_H
 #define SCHEDULER_PRIORITY_QUEUE_H
 
+#include "task.h"
 #include <stdbool.h>
 #include <stdlib.h>
-#include "task.h"
 
 /*
  * A priority queue consists of the following members:
@@ -14,8 +14,11 @@
  */
  struct priority_queue {
    struct task* array;
-   size_t capacity; //const?
+   const size_t capacity; //const?
    size_t size;
+   const size_t capacity_copy; //check for bit flips.
+   size_t size_copy; //check for bit flips.
+   struct task* array_copy;
  };
 
 /*

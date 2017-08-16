@@ -1,4 +1,5 @@
 #include "priority_queue.h"
+#include <assert.h>
 #include <stdbool.h>
 #include <time.h>
 
@@ -6,20 +7,27 @@ bool is_lower_priority(struct task current, struct task other);
 void max_heapify(struct priority_queue* p_q, size_t node_index);
 int parent(size_t i);
 bool decrease_creation_time(struct priority_queue* p_q, int task_id, time_t t);
+void assertion_test(const struct priority_queue* p_q);
 
 const time_t MAX_TIME = (time_t)((unsigned long long)(1LL << (8 * sizeof(time_t) - 1)) - 1);
+time_t START_TIME;
 
 struct priority_queue init_priority_queue(size_t capacity) {
-    struct priority_queue p_q;
+    struct priority_queue p_q = { .capacity = capacity, .capacity_copy = capacity, .size = 0, .size_copy = 0 };
     p_q.array = malloc(sizeof(struct task) * capacity);
-    p_q.capacity = capacity;
-    p_q.size = 0;
+    p_q.array_copy = p_q.array;
+    START_TIME = time(NULL);
     return p_q;
 }
 
 bool insert_task(struct priority_queue* p_q, struct task tsk) {
+  assertion_test(p_q);
+  assert(tsk.creation_time >= 0 && tsk.creation_time < (START_TIME + 3153600000)); //check that creation time isn't negative or 100 years from now.
+  assert(tsk.priority >= LOW && tsk.priority <= HIGH);
+  assert(tsk.type >= EMPTY && tsk.type <= GET_TIME);
   if (p_q->size != p_q->capacity) {
     p_q->size += 1;
+    p_q->size_copy += 1;
     p_q->array[p_q->size - 1].id = tsk.id;
     p_q->array[p_q->size - 1].type = tsk.type;
     p_q->array[p_q->size - 1].priority = LOW;
@@ -32,6 +40,7 @@ bool insert_task(struct priority_queue* p_q, struct task tsk) {
 }
 
 bool top_task(const struct priority_queue* p_q, struct task* t) {
+  assertion_test(p_q);
   if (p_q->size != 0) {
     *t = p_q->array[0];
     return true;
@@ -40,6 +49,7 @@ bool top_task(const struct priority_queue* p_q, struct task* t) {
 }
 
 bool pop_task(struct priority_queue* p_q, struct task* t) {
+  assertion_test(p_q);
   if (p_q->size != 0) {
     *t = p_q->array[0];
     return kill_task(p_q, p_q->array[0].id);
@@ -48,6 +58,8 @@ bool pop_task(struct priority_queue* p_q, struct task* t) {
 }
 
 bool increase_priority(struct priority_queue* p_q, int task_id, enum task_priority new_priority) {
+  assertion_test(p_q);
+  assert(new_priority >= LOW && new_priority <= HIGH);
   size_t i = 0;
   for (; i < p_q->size; i++) {
     if (p_q->array[i].id == task_id) {
@@ -70,10 +82,13 @@ bool increase_priority(struct priority_queue* p_q, int task_id, enum task_priori
 }
 
 void clear_priority_queue(struct priority_queue* p_q) {
+  assertion_test(p_q);
   p_q->size = 0;
+  p_q->size_copy = 0;
 }
 
 bool kill_task(struct priority_queue* p_q, int task_id) {
+  assertion_test(p_q);
   size_t i = 0;
   for (; i < p_q->size; i++) {
     if (p_q->array[i].id == task_id) {
@@ -86,14 +101,15 @@ bool kill_task(struct priority_queue* p_q, int task_id) {
   p_q->array[i].creation_time = MAX_TIME;
   max_heapify(p_q, i);
   p_q->size--;
+  p_q->size_copy--;
   return true;
 }
 
 void kill_priority_queue(struct priority_queue* p_q) {
   free(p_q->array);
   p_q->array = NULL;
-  p_q->capacity = 0;
   p_q->size = 0;
+  p_q->size_copy = 0;
 }
 
 bool is_lower_priority(struct task current, struct task other){
@@ -105,6 +121,7 @@ bool is_lower_priority(struct task current, struct task other){
 }
 
 void max_heapify(struct priority_queue* p_q, size_t node_index) {
+  assertion_test(p_q);
   size_t left = 2 * node_index + 1;
   size_t right = 2 * node_index + 2;
   size_t largest;
@@ -127,10 +144,13 @@ void max_heapify(struct priority_queue* p_q, size_t node_index) {
 }
 
 int parent(size_t i) {
+  assert(i != 0);
   return (i-1)/2;
 }
 
 bool decrease_creation_time(struct priority_queue* p_q, int task_id, time_t t) {
+  assertion_test(p_q);
+  assert(t >= 0 && t < (START_TIME + 3153600000));
   size_t i = 0;
   for (; i < p_q->size; i++) {
     if (p_q->array[i].id == task_id) {
@@ -150,4 +170,11 @@ bool decrease_creation_time(struct priority_queue* p_q, int task_id, time_t t) {
     i = parent(i);
   }
   return true;
+}
+
+void assertion_test(const struct priority_queue* p_q) {
+  assert(p_q->capacity == p_q->capacity_copy);
+  assert(p_q->size == p_q->size_copy);
+  assert(p_q->array == p_q->array_copy);
+  assert(p_q->size <= p_q->capacity);
 }
