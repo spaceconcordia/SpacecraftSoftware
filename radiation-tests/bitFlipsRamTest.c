@@ -3,8 +3,8 @@
 #include <time.h>
 
 int main (int argc, char *argv[]) {
-    unsigned long bytes = (64*1024*1024);
-    unsigned long *data = (unsigned long *) malloc(sizeof(unsigned long) * bytes);
+    unsigned long bytes = (64*1024*1024); // 64 MB
+    unsigned long volatile *data = (unsigned long *) malloc(sizeof(unsigned long) * bytes);
     unsigned long testDuration = 0;
     unsigned long bitFlipsCtr = 0;
 
@@ -36,7 +36,7 @@ int main (int argc, char *argv[]) {
 
     printf("\nFinished test with %ld bit flip(s) detected\n", bitFlipsCtr);
 
-    free(data);
+    free((void*)data);
 
     return 0;
 }
