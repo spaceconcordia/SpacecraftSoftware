@@ -28,4 +28,6 @@ In `src/common/testingParams.h`, add/verify the name of your test and the port (
 
 In `src/testrunner/radsrunner.cpp`, add the instance of your newly created class to the vector `tasks`.
 
+Add your newly created header and cpp files to `CLIENT_SOURCE_FILES` in `CMakeLists.txt`
+
 Test with the server to ensure that data is being properly received.
