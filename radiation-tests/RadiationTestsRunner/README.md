@@ -20,12 +20,12 @@ To build on ARM, copy `src/common` and `src/testrunner` to a folder in the home 
 
 ## Adding Tests
 
-For an example, see `src/taskMath.cpp`.
+For an example, see `src/testrunner/taskMath.cpp`.
 
 Create a new class, and inherit from `task`. Do computation in the `run()` method. Report information back to the server with the `sendMsg(std::string msg)` method.
 
-In `common/testingParams.h`, add/verify the name of your test and the port (the number immediately next to the name). The port must be unique. If you are adding a new test, add the new pair that you created to the `allTests` vector.
+In `src/common/testingParams.h`, add/verify the name of your test and the port (the number immediately next to the name). The port must be unique. If you are adding a new test, add the new pair that you created to the `allTests` vector.
 
-In `radsrunner.cpp`, add the instance of your newly created class to the vector `tasks`.
+In `src/testrunner/radsrunner.cpp`, add the instance of your newly created class to the vector `tasks`.
 
 Test with the server to ensure that data is being properly received.
