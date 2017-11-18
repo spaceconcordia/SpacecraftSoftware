@@ -1,7 +1,5 @@
 #include "testRAM.h"
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 
 void testRAM::run() {
@@ -13,13 +11,10 @@ void testRAM::run() {
     unsigned long testDuration = 5; // 5 min default
     unsigned long bitFlipsCtr = 0;
 
-    // printf("how long do you want this test to go on for? (in min): ");
-
-    // scanf("%ld", &testDuration);
-
     testDuration = testDuration * 60; // convert to seconds
 
-    printf("\ninitializing 64 MB size array of integers, setting all values to 0\n");
+    printf("\nInitializing 64 MB size array of integers, setting all values to 0\n");
+    sendMsg("Initializing 64 MB size array of integers, setting all values to 0");
 
     for (unsigned long i = 0; i < bytes; i++) {
         data[i] = 0;
@@ -30,6 +25,7 @@ void testRAM::run() {
     time_t startTest = time(0); // get the system time
     time_t endTest = startTest + testDuration;
 
+    long numLoops = 0;
     while (time(0) < endTest) {
         for (unsigned long i = 0; i < bytes; i++) {
             if (data[i] != 0) {
@@ -37,10 +33,12 @@ void testRAM::run() {
                 bitFlipsCtr++;
             }
         }
+        numLoops++;
+        sendMsg("Errors: " + std::to_string(bitFlipsCtr) + " bits / " + std::to_string(64 * numLoops) + " MB");
     }
 
     printf("\nFinished test with %ld bit flip(s) detected\n", bitFlipsCtr);
-    sendMsg("Finished test with " + std::to_string(bitFlipsCtr) + " bit flips for " + std::to_string(bytes*8) + " bits checked.");
+    sendMsg("Finished test with " + std::to_string(bitFlipsCtr) + " bits in error / " + std::to_string(64 * numLoops) + " MB.");
 
     free((void*)data);
 }
