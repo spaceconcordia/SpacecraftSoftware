@@ -11,7 +11,7 @@
 class testMath : public task {
 private:
     int secondsToRun;
-    const static int matrixSize = 500;
+    const static int matrixSize = 100;
     int matrixA[matrixSize][matrixSize];
     int matrixB[matrixSize][matrixSize];
     int matrixC[matrixSize][matrixSize];

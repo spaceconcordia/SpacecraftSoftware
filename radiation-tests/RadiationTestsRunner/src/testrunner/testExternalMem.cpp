@@ -9,11 +9,11 @@ void testExternalMem::run() {
 
     ofstream myfile;
 
-    // 100 1MB text files of 0's at a time
+    // 100 512KB text files of 0's at a time
     int charSize = sizeof(char); // in bytes
     int multiplier = 1024/charSize;
-    int bytesToWrite = charSize * multiplier * 1024;
-    int files = 100;
+    int bytesToWrite = charSize * multiplier * 512;
+    int files = 50;
     int loops = 1;
     int timeLengthInMinutes = testingParams::numberOfMinutesToRun;
 

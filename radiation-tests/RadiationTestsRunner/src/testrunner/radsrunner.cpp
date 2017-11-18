@@ -96,9 +96,9 @@ int main(int argc, char *argv[]){
 
     // setup all tests
     std::vector<task*> tasks;
+    tasks.push_back(new testExternalMem(testingParams::sd.first, logDirectory, serverAddress, testingParams::sd.second));
     tasks.push_back(new testMath(testingParams::math.first, logDirectory, serverAddress, testingParams::math.second));
     tasks.push_back(new testRAM(testingParams::memory.first, logDirectory, serverAddress, testingParams::memory.second));
-    tasks.push_back(new testExternalMem(testingParams::sd.first, logDirectory, serverAddress, testingParams::sd.second));
 
     // run all tests the specified number of times
     for (int iterationNumber = 1; iterationNumber <= numIterations; iterationNumber++) {
