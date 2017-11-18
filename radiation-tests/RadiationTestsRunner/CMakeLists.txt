@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 find_package( Threads )
 
-set(CLIENT_SOURCE_FILES src/testrunner/radsrunner.cpp src/testrunner/tcpconnector.cpp src/testrunner/tcpconnector.h src/common/tcpstream.cpp src/common/tcpstream.h src/testrunner/task.cpp src/testrunner/task.h src/common/testingparams.h src/testrunner/taskMath.cpp src/testrunner/taskMath.h src/testrunner/testRAM.cpp src/testrunner/testRAM.h src/testrunner/crc.h src/testrunner/crc.c)
+set(CLIENT_SOURCE_FILES src/testrunner/radsrunner.cpp src/testrunner/tcpconnector.cpp src/testrunner/tcpconnector.h src/common/tcpstream.cpp src/common/tcpstream.h src/testrunner/task.cpp src/testrunner/task.h src/common/testingparams.h src/testrunner/testMath.cpp src/testrunner/testMath.h src/testrunner/testRAM.cpp src/testrunner/testRAM.h src/testrunner/testExternalMem.cpp src/testrunner/testExternalMem.h)
 set(SERVER_SOURCE_FILES src/server/radsserver.cpp src/server/listener.cpp src/server/listener.h src/server/tcpacceptor.cpp src/server/tcpacceptor.h src/common/tcpstream.cpp src/common/tcpstream.h src/common/testingparams.h)
 
 add_library(spdlog STATIC "${CMAKE_SOURCE_DIR}/libs/spdlog")

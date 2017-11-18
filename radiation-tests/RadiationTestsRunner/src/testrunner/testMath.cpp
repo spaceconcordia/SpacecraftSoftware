@@ -2,9 +2,9 @@
 // Created by pbrink on 15/11/17.
 //
 
-#include "taskMath.h"
+#include "testMath.h"
 
-void taskMath::run() {
+void testMath::run() {
     sendMsg("Starting math test.");
     std::cout << "Starting math test." << std::endl;
 
@@ -17,7 +17,7 @@ void taskMath::run() {
 
 }
 
-void taskMath::multiplyMatrices() {
+void testMath::multiplyMatrices() {
     for (int i = 0; i < matrixSize; i++) {
         for (int j = 0; j < matrixSize; j++) {
             for (int k = 0; k < matrixSize; k++) {
@@ -27,7 +27,7 @@ void taskMath::multiplyMatrices() {
     }
 }
 
-void taskMath::verifyMatrix() {
+void testMath::verifyMatrix() {
     int errorCount = 0;
 
     for (int i = 0; i < matrixSize; i++) {
@@ -42,7 +42,7 @@ void taskMath::verifyMatrix() {
     std::cout << ("Errors: " + to_string(errorCount)) << std::endl;
 }
 
-taskMath::taskMath(std::string serverName, long port, int iterations) : task(serverName, port),
+testMath::testMath(std::string serverName, long port, int iterations) : task(serverName, port),
                                                                         iterations(iterations){
     // setup the matrices
     for (int i = 0; i < matrixSize; i++) {
@@ -54,7 +54,7 @@ taskMath::taskMath(std::string serverName, long port, int iterations) : task(ser
     }
 }
 
-void taskMath::resetResultMatrix() {
+void testMath::resetResultMatrix() {
     // setup the matrices
     for (int i = 0; i < matrixSize; i++) {
         for (int j = 0; j < matrixSize; j++) {

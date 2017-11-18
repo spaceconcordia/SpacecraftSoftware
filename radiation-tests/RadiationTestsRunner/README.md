@@ -20,7 +20,7 @@ To build on ARM, copy `src/common` and `src/testrunner` to a folder in the home 
 
 ## Adding Tests
 
-For an example, see `src/testrunner/taskMath.cpp`.
+For an example, see `src/testrunner/testMath.cpp`.
 
 Create a new class, and inherit from `task`. Do computation in the `run()` method. Report information back to the server with the `sendMsg(std::string msg)` method.
 

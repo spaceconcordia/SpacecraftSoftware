@@ -5,8 +5,9 @@
 #include "../common/testingparams.h"
 #include "tcpconnector.h"
 #include "task.h"
-#include "taskMath.h"
+#include "testMath.h"
 #include "testRAM.h"
+#include "testExternalMem.h"
 
 void notifyMainServer(const string &serverAddress, TCPConnector *connector, std::string message) {
     TCPStream* stream = connector->connect(serverAddress.c_str(), testingParams::mainServer.second);
@@ -53,8 +54,9 @@ int main(int argc, char *argv[]){
 
     // setup all tests
     std::vector<task*> tasks;
-    tasks.push_back(new taskMath(serverAddress, testingParams::math.second, 5));
+    tasks.push_back(new testMath(serverAddress, testingParams::math.second, 5));
     tasks.push_back(new testRAM(serverAddress, testingParams::memory.second));
+    tasks.push_back(new testExternalMem(serverAddress, testingParams::sd.second));
 
     // run all tests the specified number of times
     for (int iterationNumber = 1; iterationNumber <= numIterations; iterationNumber++) {

@@ -8,7 +8,7 @@ void testRAM::run() {
 
     unsigned long bytes = (64*1024*1024); // 64 MB
     unsigned long volatile *data = (unsigned long *) malloc(sizeof(unsigned long) * bytes);
-    unsigned long testDuration = 5; // 5 min default
+    unsigned long testDuration = 1; // 5 min default
     unsigned long bitFlipsCtr = 0;
 
     testDuration = testDuration * 60; // convert to seconds

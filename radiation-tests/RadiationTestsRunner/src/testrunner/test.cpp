@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <time.h>
-#include "crc.h" // crc <-> cyclical redundancy test
 
 int main() {
     // sendMsg("Starting external memory test.");

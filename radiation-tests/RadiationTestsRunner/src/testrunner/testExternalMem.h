@@ -1,15 +1,15 @@
-#ifndef RADIATIONTESTSRUNNER_TESTRAM_H
-#define RADIATIONTESTSRUNNER_TESTRAM_H
+#ifndef RADIATIONTESTSRUNNER_TESTEXTERNALMEM_H
+#define RADIATIONTESTSRUNNER_TESTEXTERNALMEM_H
 
 
 #include "task.h"
 
-class testRAM : public task {
+class testExternalMem : public task {
 
 public:
-    testRAM(std::string serverName, long port);
+    testExternalMem(std::string serverName, long port);
     void run() override;
 };
 
 
-#endif //RADIATIONTESTSRUNNER_TESTRAM_H
+#endif //RADIATIONTESTSRUNNER_TESTEXTERNALMEM_H

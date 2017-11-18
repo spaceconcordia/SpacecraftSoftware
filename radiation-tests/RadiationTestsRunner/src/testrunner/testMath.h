@@ -2,13 +2,13 @@
 // Created by pbrink on 15/11/17.
 //
 
-#ifndef RADIATIONTESTSRUNNER_TASKMATH_H
-#define RADIATIONTESTSRUNNER_TASKMATH_H
+#ifndef RADIATIONTESTSRUNNER_TESTMATH_H
+#define RADIATIONTESTSRUNNER_TESTMATH_H
 
 
 #include "task.h"
 
-class taskMath : public task {
+class testMath : public task {
 private:
     int iterations;
     const static int matrixSize = 100;
@@ -19,9 +19,9 @@ private:
     void verifyMatrix();
     void resetResultMatrix();
 public:
-    taskMath(std::string serverName, long port, int iterations);
+    testMath(std::string serverName, long port, int iterations);
     void run() override;
 };
 
 
-#endif //RADIATIONTESTSRUNNER_TASKMATH_H
+#endif //RADIATIONTESTSRUNNER_TESTMATH_H
