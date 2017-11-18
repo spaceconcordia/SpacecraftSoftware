@@ -1,5 +1,0 @@
-/home/peter/Documents/Programming/space-concordia/spacecraft/SpacecraftSoftware/radiation-tests/RadiationTestsRunner/build/CMakeFiles/edit_cache.dir
-/home/peter/Documents/Programming/space-concordia/spacecraft/SpacecraftSoftware/radiation-tests/RadiationTestsRunner/build/CMakeFiles/RadiationTestsServer.dir
-/home/peter/Documents/Programming/space-concordia/spacecraft/SpacecraftSoftware/radiation-tests/RadiationTestsRunner/build/CMakeFiles/rebuild_cache.dir
-/home/peter/Documents/Programming/space-concordia/spacecraft/SpacecraftSoftware/radiation-tests/RadiationTestsRunner/build/CMakeFiles/spdlog.dir
-/home/peter/Documents/Programming/space-concordia/spacecraft/SpacecraftSoftware/radiation-tests/RadiationTestsRunner/build/CMakeFiles/RadiationTestsClient.dir

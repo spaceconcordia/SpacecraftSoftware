@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/RadiationTestsServer.dir/src/server/radsserver.cpp.o CMakeFiles/RadiationTestsServer.dir/src/server/listener.cpp.o CMakeFiles/RadiationTestsServer.dir/src/server/tcpacceptor.cpp.o CMakeFiles/RadiationTestsServer.dir/src/common/tcpstream.cpp.o  -o RadiationTestsServer -lpthread libspdlog.a 
