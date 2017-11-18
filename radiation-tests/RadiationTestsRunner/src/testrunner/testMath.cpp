@@ -3,12 +3,15 @@
 //
 
 #include "testMath.h"
+#include "../common/testingparams.h"
 
 void testMath::run() {
     sendMsg("Starting math test.");
     std::cout << "Starting math test." << std::endl;
 
-    for (int n = 0; n < iterations; n++) {
+    time_t startTest = time(0);
+    time_t endTest = startTest + secondsToRun;
+    while (time(0) < endTest) {
         // do the matrix calculation
         multiplyMatrices();
         verifyMatrix();
@@ -39,11 +42,12 @@ void testMath::verifyMatrix() {
     }
 
     sendMsg("Errors: " + to_string(errorCount) + "/" + to_string(matrixSize*matrixSize));
-    std::cout << ("Errors: " + to_string(errorCount)) << std::endl;
+    std::cout << ("Math test errors: " + to_string(errorCount)) << std::endl;
 }
 
-testMath::testMath(std::string serverName, long port, int iterations) : task(serverName, port),
-                                                                        iterations(iterations){
+testMath::testMath(std::string testName, std::string serverName, long port) :
+        task(testName, serverName, port) {
+    secondsToRun = testingParams::numberOfMinutesToRun*60;
     // setup the matrices
     for (int i = 0; i < matrixSize; i++) {
         for (int j = 0; j < matrixSize; j++) {

@@ -7,7 +7,7 @@
 class testRAM : public task {
 
 public:
-    testRAM(std::string serverName, long port);
+    testRAM(std::string testName, std::string serverName, long port);
     void run() override;
 };
 

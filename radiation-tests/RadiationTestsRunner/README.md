@@ -16,7 +16,7 @@ To build on ARM, copy `src/common` and `src/testrunner` to a folder in the home 
 `./radsserver --output-dir|-o <log output directory>`
 
 ### Target/Client
-`./radsrunner [--server <server name/ip>] [--iterations <number of test iterations>]`
+`./radsrunner [--server <server name/ip>] [--secondsToRun <number of test secondsToRun>]`
 
 ## Adding Tests
 

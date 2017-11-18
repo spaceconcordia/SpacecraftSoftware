@@ -10,6 +10,8 @@
 
 namespace testingParams {
 
+    static const int numberOfMinutesToRun = 1;
+
     static const std::pair<std::string, long> memory("memory", 23425);
     static const std::pair<std::string, long> sd("sd", 23426);
     static const std::pair<std::string, long> math("math", 23427);
@@ -19,7 +21,7 @@ namespace testingParams {
     static const std::pair<std::string, long> mainServer("main", 23424);
 
     static const std::vector<std::pair<std::string, long>> allTests = {
-            memory, sd, math, eeprom, temp
+            memory, sd, math
     };
 
 }

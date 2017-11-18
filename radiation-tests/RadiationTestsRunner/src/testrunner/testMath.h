@@ -10,8 +10,8 @@
 
 class testMath : public task {
 private:
-    int iterations;
-    const static int matrixSize = 100;
+    int secondsToRun;
+    const static int matrixSize = 500;
     int matrixA[matrixSize][matrixSize];
     int matrixB[matrixSize][matrixSize];
     int matrixC[matrixSize][matrixSize];
@@ -19,7 +19,7 @@ private:
     void verifyMatrix();
     void resetResultMatrix();
 public:
-    testMath(std::string serverName, long port, int iterations);
+    testMath(std::string testName, std::string serverName, long port);
     void run() override;
 };
 

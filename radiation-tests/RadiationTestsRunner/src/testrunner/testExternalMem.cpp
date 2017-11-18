@@ -1,4 +1,5 @@
 #include "testExternalMem.h"
+#include "../common/testingparams.h"
 #include <iostream>
 #include <fstream>
 
@@ -14,14 +15,14 @@ void testExternalMem::run() {
     int bytesToWrite = charSize * multiplier * 1024;
     int files = 100;
     int loops = 1;
-    int timeLengthInMinutes = 1;
+    int timeLengthInMinutes = testingParams::numberOfMinutesToRun;
 
-    printf("charSize = %d\nbytesToWrite = %d\n", charSize, bytesToWrite);
+    printf("External memory test using charSize = %d\nbytesToWrite = %d\n", charSize, bytesToWrite);
 
     // create test file directory
     const int dir_err = system("mkdir -p externalMemTestData");
     if (-1 == dir_err) {
-        printf("Error creating directory!\n");
+        printf("Error creating directory for external memory teset!\n");
         sendMsg("ERROR CREATING DIRECTORY FOR EXTERNAL MEMORY TEST!");
         return;
     }
@@ -57,16 +58,16 @@ void testExternalMem::run() {
         sendMsg("Errors: " + std::to_string(filesCorrupted) + " / " + std::to_string(files*loops));
     }
 
-    printf("Finished test with %ld files corrupted out of %d\n", filesCorrupted, (files*loops));
+    printf("Finished external memory test with %ld files corrupted out of %d\n", filesCorrupted, (files*loops));
 
     const int delete_err = system("rm -rf externalMemTestData");
     if (0 != delete_err) {
-        printf("Error deleting directory!\n");
+        printf("Error deleting directory for external memory test!\n");
         exit(1);
     }
 }
 
-testExternalMem::testExternalMem(std::string serverName, long port) : task(serverName, port) {
+testExternalMem::testExternalMem(std::string testName, std::string serverName, long port) : task(testName, serverName, port) {
 
 }
 

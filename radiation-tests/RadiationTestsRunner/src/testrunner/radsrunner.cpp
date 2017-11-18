@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
         for (int i = 1; i < argc - 1; i++) {
             if (std::strcmp(argv[i], "--server") == 0) {
                 serverAddress = argv[++i];
-            } else if (std::strcmp(argv[i], "--iterations") == 0) {
+            } else if (std::strcmp(argv[i], "--secondsToRun") == 0) {
                 numIterationsString = argv[++i];
             } else {
                 unknownArgument = true;
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
     }
     if (unknownArgument) {
         std::cout << "Unknown arguments." << std::endl;
-        std::cout << "Usage: " << argv[0] << " [--server <server name/ip>] [--iterations <number of test iterations>]" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [--server <server name/ip>] [--secondsToRun <number of test secondsToRun>]" << std::endl;
         return 1;
     }
     std::cout << "Using server " << serverAddress << std::endl;
@@ -54,9 +54,9 @@ int main(int argc, char *argv[]){
 
     // setup all tests
     std::vector<task*> tasks;
-    tasks.push_back(new testMath(serverAddress, testingParams::math.second, 5));
-    tasks.push_back(new testRAM(serverAddress, testingParams::memory.second));
-    tasks.push_back(new testExternalMem(serverAddress, testingParams::sd.second));
+    tasks.push_back(new testMath(testingParams::math.first, serverAddress, testingParams::math.second));
+    tasks.push_back(new testRAM(testingParams::memory.first, serverAddress, testingParams::memory.second));
+    tasks.push_back(new testExternalMem(testingParams::sd.first, serverAddress, testingParams::sd.second));
 
     // run all tests the specified number of times
     for (int iterationNumber = 1; iterationNumber <= numIterations; iterationNumber++) {

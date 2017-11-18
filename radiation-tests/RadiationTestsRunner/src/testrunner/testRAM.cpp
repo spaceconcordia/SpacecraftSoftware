@@ -1,4 +1,5 @@
 #include "testRAM.h"
+#include "../common/testingparams.h"
 #include <stdlib.h>
 
 
@@ -8,7 +9,7 @@ void testRAM::run() {
 
     unsigned long bytes = (64*1024*1024); // 64 MB
     unsigned long volatile *data = (unsigned long *) malloc(sizeof(unsigned long) * bytes);
-    unsigned long testDuration = 1; // 5 min default
+    unsigned long testDuration = testingParams::numberOfMinutesToRun;
     unsigned long bitFlipsCtr = 0;
 
     testDuration = testDuration * 60; // convert to seconds
@@ -37,13 +38,13 @@ void testRAM::run() {
         sendMsg("Errors: " + std::to_string(bitFlipsCtr) + " bits / " + std::to_string(64 * numLoops) + " MB");
     }
 
-    printf("\nFinished test with %ld bit flip(s) detected\n", bitFlipsCtr);
-    sendMsg("Finished test with " + std::to_string(bitFlipsCtr) + " bits in error / " + std::to_string(64 * numLoops) + " MB.");
+    printf("\nFinished memory test with %ld bit flip(s) detected\n", bitFlipsCtr);
+    sendMsg("Finished memory test with " + std::to_string(bitFlipsCtr) + " bits in error / " + std::to_string(64 * numLoops) + " MB.");
 
     free((void*)data);
 }
 
-testRAM::testRAM(std::string serverName, long port) : task(serverName, port) {
+testRAM::testRAM(std::string testName, std::string serverName, long port) : task(testName, serverName, port) {
 
 }
 
