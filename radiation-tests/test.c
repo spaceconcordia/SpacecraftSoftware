@@ -1,3 +1,8 @@
+/*
+This file was created to practice and learn more about C,
+before finally creating the bitFlipsRamTest.c program
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
