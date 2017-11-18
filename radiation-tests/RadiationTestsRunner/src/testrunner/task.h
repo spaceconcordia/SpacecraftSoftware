@@ -11,13 +11,15 @@
 class task {
 protected:
     std::string testName;
+    std::string logDirectory;
     std::string serverName;
     long port;
     TCPConnector* connector;
     void sendMsg(std::string msg);
+    void sendToFile(const string &fileName, const string &content, bool append);
 public:
-    task(std::string testName, std::string serverName, long port) : testName(testName), serverName(serverName), port(port) {}
-
+    task(std::string testName, std::string logDirectory, std::string serverName, long port) :
+            testName(testName), logDirectory(logDirectory), serverName(serverName), port(port) {}
     virtual void run() {};
 };
 

@@ -45,8 +45,8 @@ void testMath::verifyMatrix() {
     std::cout << ("Math test errors: " + to_string(errorCount)) << std::endl;
 }
 
-testMath::testMath(std::string testName, std::string serverName, long port) :
-        task(testName, serverName, port) {
+testMath::testMath(std::string testName, std::string logDirectory, std::string serverName, long port) :
+        task(testName, logDirectory, serverName, port) {
     secondsToRun = testingParams::numberOfMinutesToRun*60;
     // setup the matrices
     for (int i = 0; i < matrixSize; i++) {

@@ -7,7 +7,7 @@
 class testExternalMem : public task {
 
 public:
-    testExternalMem(std::string testName, std::string serverName, long port);
+    testExternalMem(std::string testName, std::string logDirectory, std::string serverName, long port);
     void run() override;
 };
 

@@ -44,7 +44,8 @@ void testRAM::run() {
     free((void*)data);
 }
 
-testRAM::testRAM(std::string testName, std::string serverName, long port) : task(testName, serverName, port) {
+testRAM::testRAM(std::string testName, std::string logDirectory, std::string serverName, long port) :
+        task(testName, logDirectory, serverName, port) {
 
 }
 

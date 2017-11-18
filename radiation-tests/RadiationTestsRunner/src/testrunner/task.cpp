@@ -1,7 +1,7 @@
 //
 // Created by pbrink on 15/11/17.
 //
-
+#include <fstream>
 #include "task.h"
 
 void task::sendMsg(std::string msg) {
@@ -21,6 +21,17 @@ void task::sendMsg(std::string msg) {
         newMessage.append(", " + testName + ", " + msg);
         // send to the server
         stream->send(newMessage.c_str(), newMessage.size());
+        // write to local file
+        sendToFile(logDirectory + "/" + testName + ".log", newMessage + "\n", true);
         delete stream;
     }
+}
+
+void task::sendToFile(const std::string& fileName, const std::string& content, bool append = true) {
+    std::ofstream outfile;
+    if (append)
+        outfile.open(fileName, std::ios_base::app);
+    else
+        outfile.open(fileName);
+    outfile << content;
 }

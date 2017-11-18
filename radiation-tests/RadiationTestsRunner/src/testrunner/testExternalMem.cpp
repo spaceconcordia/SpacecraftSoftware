@@ -67,7 +67,8 @@ void testExternalMem::run() {
     }
 }
 
-testExternalMem::testExternalMem(std::string testName, std::string serverName, long port) : task(testName, serverName, port) {
+testExternalMem::testExternalMem(std::string testName, std::string logDirectory, std::string serverName, long port) :
+        task(testName, logDirectory, serverName, port) {
 
 }
 

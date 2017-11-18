@@ -19,7 +19,7 @@ private:
     void verifyMatrix();
     void resetResultMatrix();
 public:
-    testMath(std::string testName, std::string serverName, long port);
+    testMath(std::string testName, std::string logDirectory, std::string serverName, long port);
     void run() override;
 };
 

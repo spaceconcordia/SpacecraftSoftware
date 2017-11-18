@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstring>
 #include <thread>
+#include <sys/stat.h>
+#include <dirent.h>
 #include "../common/tcpstream.h"
 #include "../common/testingparams.h"
 #include "tcpconnector.h"
@@ -20,6 +22,7 @@ void notifyMainServer(const string &serverAddress, TCPConnector *connector, std:
 int main(int argc, char *argv[]){
 	std::string serverAddress = "192.168.1.139";
     std::string numIterationsString = "1";
+    std::string logDirectory = "../logs";
     int numIterations;
 
     // set test parameters from command line
@@ -28,8 +31,10 @@ int main(int argc, char *argv[]){
         for (int i = 1; i < argc - 1; i++) {
             if (std::strcmp(argv[i], "--server") == 0) {
                 serverAddress = argv[++i];
-            } else if (std::strcmp(argv[i], "--secondsToRun") == 0) {
+            } else if (std::strcmp(argv[i], "--iterations") == 0) {
                 numIterationsString = argv[++i];
+            } else if (std::strcmp(argv[i], "--output-directory") == 0 || std::strcmp(argv[i], "-o") == 0) {
+                logDirectory = argv[++i];
             } else {
                 unknownArgument = true;
             }
@@ -40,11 +45,48 @@ int main(int argc, char *argv[]){
     } catch (std::exception const & e) {
         unknownArgument = true;
     }
+
+    // create local log directory
+    if (!logDirectory.empty()) {
+        DIR* dir;
+        dir = opendir(logDirectory.c_str());
+        if (dir != NULL) {
+            closedir(dir);
+        } else {
+            const int dir_err = mkdir(logDirectory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+            if (-1 == dir_err)
+            {
+                std::cout << "Error creating directory at " << logDirectory << std::endl;
+                exit(1);
+            }
+        }
+    } else {
+        unknownArgument = true;
+    }
+
     if (unknownArgument) {
         std::cout << "Unknown arguments." << std::endl;
         std::cout << "Usage: " << argv[0] << " [--server <server name/ip>] [--secondsToRun <number of test secondsToRun>]" << std::endl;
         return 1;
     }
+
+    // create local log directory
+    if (!logDirectory.empty()) {
+        DIR* dir;
+        dir = opendir(logDirectory.c_str());
+        if (dir != NULL) {
+            closedir(dir);
+        } else {
+            const int dir_err = mkdir(logDirectory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+            if (-1 == dir_err)
+            {
+                std::cout << "Error creating directory at " << logDirectory << std::endl;
+                exit(1);
+            }
+        }
+    }
+
+
     std::cout << "Using server " << serverAddress << std::endl;
     std::cout << "Will repeat all all tests " << numIterations << " times." << std::endl;
 
@@ -54,9 +96,9 @@ int main(int argc, char *argv[]){
 
     // setup all tests
     std::vector<task*> tasks;
-    tasks.push_back(new testMath(testingParams::math.first, serverAddress, testingParams::math.second));
-    tasks.push_back(new testRAM(testingParams::memory.first, serverAddress, testingParams::memory.second));
-    tasks.push_back(new testExternalMem(testingParams::sd.first, serverAddress, testingParams::sd.second));
+    tasks.push_back(new testMath(testingParams::math.first, logDirectory, serverAddress, testingParams::math.second));
+    tasks.push_back(new testRAM(testingParams::memory.first, logDirectory, serverAddress, testingParams::memory.second));
+    tasks.push_back(new testExternalMem(testingParams::sd.first, logDirectory, serverAddress, testingParams::sd.second));
 
     // run all tests the specified number of times
     for (int iterationNumber = 1; iterationNumber <= numIterations; iterationNumber++) {
