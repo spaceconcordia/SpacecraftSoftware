@@ -2,13 +2,16 @@
 // Created by pbrink on 15/11/17.
 //
 
-#include "taskMath.h"
+#include "testMath.h"
+#include "../common/testingparams.h"
 
-void taskMath::run() {
+void testMath::run() {
     sendMsg("Starting math test.");
     std::cout << "Starting math test." << std::endl;
 
-    for (int n = 0; n < iterations; n++) {
+    time_t startTest = time(0);
+    time_t endTest = startTest + secondsToRun;
+    while (time(0) < endTest) {
         // do the matrix calculation
         multiplyMatrices();
         verifyMatrix();
@@ -17,7 +20,7 @@ void taskMath::run() {
 
 }
 
-void taskMath::multiplyMatrices() {
+void testMath::multiplyMatrices() {
     for (int i = 0; i < matrixSize; i++) {
         for (int j = 0; j < matrixSize; j++) {
             for (int k = 0; k < matrixSize; k++) {
@@ -27,7 +30,7 @@ void taskMath::multiplyMatrices() {
     }
 }
 
-void taskMath::verifyMatrix() {
+void testMath::verifyMatrix() {
     int errorCount = 0;
 
     for (int i = 0; i < matrixSize; i++) {
@@ -39,11 +42,12 @@ void taskMath::verifyMatrix() {
     }
 
     sendMsg("Errors: " + to_string(errorCount) + "/" + to_string(matrixSize*matrixSize));
-    std::cout << ("Errors: " + to_string(errorCount)) << std::endl;
+    std::cout << ("Math test errors: " + to_string(errorCount)) << std::endl;
 }
 
-taskMath::taskMath(std::string serverName, long port, int iterations) : task(serverName, port),
-                                                                        iterations(iterations){
+testMath::testMath(std::string testName, std::string logDirectory, std::string serverName, long port) :
+        task(testName, logDirectory, serverName, port) {
+    secondsToRun = testingParams::numberOfMinutesToRun*60;
     // setup the matrices
     for (int i = 0; i < matrixSize; i++) {
         for (int j = 0; j < matrixSize; j++) {
@@ -54,7 +58,7 @@ taskMath::taskMath(std::string serverName, long port, int iterations) : task(ser
     }
 }
 
-void taskMath::resetResultMatrix() {
+void testMath::resetResultMatrix() {
     // setup the matrices
     for (int i = 0; i < matrixSize; i++) {
         for (int j = 0; j < matrixSize; j++) {

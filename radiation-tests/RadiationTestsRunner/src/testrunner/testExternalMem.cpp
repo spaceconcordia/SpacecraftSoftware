@@ -1,62 +1,74 @@
 #include "testExternalMem.h"
+#include "../common/testingparams.h"
 #include <iostream>
 #include <fstream>
 
-void testRAM::run() {
+void testExternalMem::run() {
     sendMsg("Starting external memory test.");
     std::cout << "Starting external memory test." << std::endl;
 
     ofstream myfile;
 
-    // 1MB, 10
+    // 100 512KB text files of 0's at a time
+    int charSize = sizeof(char); // in bytes
+    int multiplier = 1024/charSize;
+    int bytesToWrite = charSize * multiplier * 512;
+    int files = 50;
+    int loops = 1;
+    int timeLengthInMinutes = testingParams::numberOfMinutesToRun;
 
-    int i = 0;
-    while (i < 10) {
-        myfile.open("~/sampleData/test." + std::to_string(i) + "txt");
+    printf("External memory test using charSize = %d\nbytesToWrite = %d\n", charSize, bytesToWrite);
+
+    // create test file directory
+    const int dir_err = system("mkdir -p externalMemTestData");
+    if (-1 == dir_err) {
+        printf("Error creating directory for external memory teset!\n");
+        sendMsg("ERROR CREATING DIRECTORY FOR EXTERNAL MEMORY TEST!");
+        return;
     }
 
+    // create files
+    for (int i = 0; i < files; i++) {
+        myfile.open("externalMemTestData/test" + std::to_string(i) + ".txt");
+        for (int j = 0; j < bytesToWrite; j++) {
+            myfile << "0";
+        }
 
-
-
-/*-------------------------------------------------------------------------------------------------*/
-    unsigned long bytes = (64*1024*1024); // 64 MB
-    unsigned long volatile *data = (unsigned long *) malloc(sizeof(unsigned long) * bytes);
-    unsigned long testDuration = 5; // 5 min default
-    unsigned long bitFlipsCtr = 0;
-
-    // printf("how long do you want this test to go on for? (in min): ");
-
-    // scanf("%ld", &testDuration);
-
-    testDuration = testDuration * 60; // convert to seconds
-
-    printf("\ninitializing 64 MB size array of integers, setting all values to 0\n");
-
-    for (unsigned long i = 0; i < bytes; i++) {
-        data[i] = 0;
+        myfile.close();
     }
 
-    printf("checking for bitflips now\n");
-
-    time_t startTest = time(0); // get the system time
-    time_t endTest = startTest + testDuration;
+    // check that all files are correct
+    unsigned long filesCorrupted = 0;
+    char ch;
+    int duration = 60 * timeLengthInMinutes; // min test
+    time_t startTest = time(0);
+    time_t endTest = startTest + duration;
 
     while (time(0) < endTest) {
-        for (unsigned long i = 0; i < bytes; i++) {
-            if (data[i] != 0) {
-                data[i] = 0; // reset to 0
-                bitFlipsCtr++;
+        for (int i = 0; i < files; i++) {
+            fstream fin("externalMemTestData/test" + std::to_string(i) + ".txt", fstream::in);
+            while (fin >> noskipws >> ch) { // noskipws -> no skip white spaces
+                if (ch != '0') {
+                    filesCorrupted++;
+                    break;
+                }
             }
         }
+        loops++;
+        sendMsg("Errors: " + std::to_string(filesCorrupted) + " / " + std::to_string(files*loops));
     }
 
-    printf("\nFinished test with %ld bit flip(s) detected\n", bitFlipsCtr);
-    sendMsg("Finished test with " + std::to_string(bitFlipsCtr) + " bit flips for " + std::to_string(bytes*8) + " bits checked");
+    printf("Finished external memory test with %ld files corrupted out of %d\n", filesCorrupted, (files*loops));
 
-    free((void*)data);
+    const int delete_err = system("rm -rf externalMemTestData");
+    if (0 != delete_err) {
+        printf("Error deleting directory for external memory test!\n");
+        exit(1);
+    }
 }
 
-testRAM::testRAM(std::string serverName, long port) : task(serverName, port) {
+testExternalMem::testExternalMem(std::string testName, std::string logDirectory, std::string serverName, long port) :
+        task(testName, logDirectory, serverName, port) {
 
 }
 
