@@ -1,0 +1,65 @@
+Thu Nov 16 07:35:04 2017, memory, Starting RAM test.
+Thu Nov 16 07:35:04 2017, memory, Initializing 64 MB size array of integers, setting all values to 0
+Thu Nov 16 07:35:18 2017, memory, Errors: 0 bits / 64 MB
+Thu Nov 16 07:35:26 2017, memory, Errors: 0 bits / 128 MB
+Thu Nov 16 07:35:35 2017, memory, Errors: 0 bits / 192 MB
+Thu Nov 16 07:35:43 2017, memory, Errors: 0 bits / 256 MB
+Thu Nov 16 07:35:51 2017, memory, Errors: 0 bits / 320 MB
+Thu Nov 16 07:36:00 2017, memory, Errors: 0 bits / 384 MB
+Thu Nov 16 07:36:08 2017, memory, Errors: 0 bits / 448 MB
+Thu Nov 16 07:36:13 2017, memory, Errors: 0 bits / 512 MB
+Thu Nov 16 07:36:13 2017, memory, Finished memory test with 0 bits in error / 512 MB.
+Thu Nov 16 07:41:44 2017, memory, Starting RAM test.
+Thu Nov 16 07:41:44 2017, memory, Initializing 64 MB size array of integers, setting all values to 0
+Thu Nov 16 07:41:51 2017, memory, Errors: 0 bits / 32 MB
+Thu Nov 16 07:41:55 2017, memory, Errors: 0 bits / 64 MB
+Thu Nov 16 07:41:59 2017, memory, Errors: 0 bits / 96 MB
+Thu Nov 16 07:42:03 2017, memory, Errors: 0 bits / 128 MB
+Thu Nov 16 07:42:08 2017, memory, Errors: 0 bits / 160 MB
+Thu Nov 16 07:42:12 2017, memory, Errors: 0 bits / 192 MB
+Thu Nov 16 07:42:16 2017, memory, Errors: 0 bits / 224 MB
+Thu Nov 16 07:42:20 2017, memory, Errors: 0 bits / 256 MB
+Thu Nov 16 07:42:25 2017, memory, Errors: 0 bits / 288 MB
+Thu Nov 16 07:42:29 2017, memory, Errors: 0 bits / 320 MB
+Thu Nov 16 07:42:33 2017, memory, Errors: 0 bits / 352 MB
+Thu Nov 16 07:42:37 2017, memory, Errors: 0 bits / 384 MB
+Thu Nov 16 07:42:41 2017, memory, Errors: 0 bits / 416 MB
+Thu Nov 16 07:42:45 2017, memory, Errors: 0 bits / 448 MB
+Thu Nov 16 07:42:48 2017, memory, Errors: 0 bits / 480 MB
+Thu Nov 16 07:42:48 2017, memory, Finished memory test with 0 bits in error / 480 MB.
+Thu Nov 16 07:51:17 2017, memory, Starting RAM test.
+Thu Nov 16 07:51:17 2017, memory, Initializing 64 MB size array of integers, setting all values to 0
+Thu Nov 16 07:51:24 2017, memory, Errors: 0 bits / 32 MB
+Thu Nov 16 07:51:28 2017, memory, Errors: 0 bits / 64 MB
+Thu Nov 16 07:51:33 2017, memory, Errors: 0 bits / 96 MB
+Thu Nov 16 07:51:37 2017, memory, Errors: 0 bits / 128 MB
+Thu Nov 16 07:51:41 2017, memory, Errors: 0 bits / 160 MB
+Thu Nov 16 07:51:45 2017, memory, Errors: 0 bits / 192 MB
+Thu Nov 16 07:51:50 2017, memory, Errors: 0 bits / 224 MB
+Thu Nov 16 07:51:54 2017, memory, Errors: 0 bits / 256 MB
+Thu Nov 16 07:51:58 2017, memory, Errors: 0 bits / 288 MB
+Thu Nov 16 07:52:02 2017, memory, Errors: 0 bits / 320 MB
+Thu Nov 16 07:52:06 2017, memory, Errors: 0 bits / 352 MB
+Thu Nov 16 07:52:11 2017, memory, Errors: 0 bits / 384 MB
+Thu Nov 16 07:52:15 2017, memory, Errors: 0 bits / 416 MB
+Thu Nov 16 07:52:18 2017, memory, Errors: 0 bits / 448 MB
+Thu Nov 16 07:52:21 2017, memory, Errors: 0 bits / 480 MB
+Thu Nov 16 07:52:21 2017, memory, Finished memory test with 0 bits in error / 480 MB.
+Thu Nov 16 07:53:48 2017, memory, Starting RAM test.
+Thu Nov 16 07:53:48 2017, memory, Initializing 64 MB size array of integers, setting all values to 0
+Thu Nov 16 07:53:55 2017, memory, Errors: 0 bits / 32 MB
+Thu Nov 16 07:53:59 2017, memory, Errors: 0 bits / 64 MB
+Thu Nov 16 07:54:03 2017, memory, Errors: 0 bits / 96 MB
+Thu Nov 16 07:54:08 2017, memory, Errors: 0 bits / 128 MB
+Thu Nov 16 07:54:12 2017, memory, Errors: 0 bits / 160 MB
+Thu Nov 16 07:54:16 2017, memory, Errors: 0 bits / 192 MB
+Thu Nov 16 07:54:20 2017, memory, Errors: 0 bits / 224 MB
+Thu Nov 16 07:54:24 2017, memory, Errors: 0 bits / 256 MB
+Thu Nov 16 07:54:29 2017, memory, Errors: 0 bits / 288 MB
+Thu Nov 16 07:54:33 2017, memory, Errors: 0 bits / 320 MB
+Thu Nov 16 07:54:37 2017, memory, Errors: 0 bits / 352 MB
+Thu Nov 16 07:54:41 2017, memory, Errors: 0 bits / 384 MB
+Thu Nov 16 07:54:45 2017, memory, Errors: 0 bits / 416 MB
+Thu Nov 16 07:54:49 2017, memory, Errors: 0 bits / 448 MB
+Thu Nov 16 07:54:52 2017, memory, Errors: 0 bits / 480 MB
+Thu Nov 16 07:54:52 2017, memory, Finished memory test with 0 bits in error / 480 MB.
