@@ -3,7 +3,7 @@ Description=Radiation Tests Runner
 After=network.target
 
 [Service]
-ExecStart=/home/debian/RadiationTestsRunner/src/radsrunner --server 192.168.7.1 --iterations 5
+ExecStart=/home/alarm/RadiationTestsRunner/src/radsrunner --server 10.0.0.2 --iterations 50
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
