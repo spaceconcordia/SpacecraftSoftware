@@ -1,15 +1,12 @@
 [Unit]
 Description=Radiation Tests Runner
-After=network.target
+After=compileradsrunner.service
 
 [Service]
-ExecStart=/home/alarm/RadiationTestsRunner/src/radsrunner --server 10.0.0.2 --iterations 50
+ExecStart=/home/debian/RadiationTestsRunner/src/radsrunner --server 10.0.0.2 --iterations 30
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
-
-# This service file runs an SSH daemon that forks for each incoming connection.
-# If you prefer to spawn on-demand daemons, use sshd.socket and sshd@.service.
