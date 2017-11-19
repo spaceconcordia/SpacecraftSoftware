@@ -3,7 +3,7 @@ Description=Radiation Tests Compiler
 After=network.target
 
 [Service]
-ExecStart=/home/debian/RadiationTestsRunner/src/compileRadsrunner.sh
+ExecStart=/home/alarm/RadiationTestsRunner/src/compileRadsrunner.sh
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
