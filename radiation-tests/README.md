@@ -1,4 +1,17 @@
 # Radiation Tests
+
+## Notes for next time
+- Don't rely on SSH. Setup so that tests will automatically begin on boot
+- Use serial debugger on Arietta instead of USB
+- Don't use TCP connections, send UDP packets and stderr to the serial port
+- Implement I²C tests
+- Investigate why our network connection was very bad
+- Determine OS changes to be made:
+  * Should we stick to Arch ARM?
+  * Should we change to the default Debian image from Acme Systems?
+  * Should we use our own buildroot environment?
+- Implement some of the software we will be using for the satellite itself so that we will be able to run tests on that
+
 ## Connecting to the Arietta G25
 Currently using the [Arch Arm](https://archlinuxarm.org/platforms/armv5/arietta-g25) distribution for the Arietta.
 The SD card has been setup following the guide, and in addition gcc has been installed to be able to compile.
