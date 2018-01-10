@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# Probably will need to run as root (rather than just sudo).
-# This is for the last command.
 # Usage: ./setupNetworkConnection ARIETTA_DEVICE ETHERNET_DEVICE
 # Both these values can be found by checking with ifconfig
 
