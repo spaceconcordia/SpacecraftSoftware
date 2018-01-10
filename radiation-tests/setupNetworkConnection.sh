@@ -66,4 +66,4 @@ iptables -t nat -A POSTROUTING -s $arietta_address/32 -o $network_device -j MASQ
 sleep 2s
 
 # Allow ip forwarding
-echo 1 > /proc/sys/net/ipv4/ip_forward
+sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
