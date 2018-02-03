@@ -1,17 +1,41 @@
-*.swp
-ext-tree/board/
+# Created by https://www.gitignore.io/api/c++,bazel
 
-# backup text files
-*.un~
-*~
+### Bazel ###
+/bazel-*
 
-# executables
-# for now these need to be explicitly noted for EACH ONE
-hello/hello
+### C++ ###
+# Prerequisites
+*.d
 
-# test coverage files
-*.gcno
-*.gcda
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
 
-# Ignore the .DS_Store file created on Macs.
-.DS_Store
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+
+# End of https://www.gitignore.io/api/c++,bazel

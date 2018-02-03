@@ -1,9 +1,0 @@
-[Unit]
-Description=Radiation Tests Runner
-After=systemd-timesyncd.service
-
-[Service]
-ExecStart=/home/alarm/RadiationTestsRunner/src/radsrunner --server 10.0.0.2 --iterations 30
-
-[Install]
-WantedBy=multi-user.target
