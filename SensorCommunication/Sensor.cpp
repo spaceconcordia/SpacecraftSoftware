@@ -17,7 +17,7 @@ Sensor::Sensor(string name,
         if (isFilenameAllowed(outputFileName)) {
             this->outputFileName = outputFileName;
         } else {
-            throw new 
+            throw new std::exception
         }
     }
 }
