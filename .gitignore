@@ -15,3 +15,6 @@ hello/hello
 
 # Ignore the .DS_Store file created on Macs.
 .DS_Store
+
+# Ignore .idea folders
+.idea/
