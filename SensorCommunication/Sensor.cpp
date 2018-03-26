@@ -3,6 +3,7 @@
 //
 
 #include <stdexcept>
+#include <iostream>
 #include "Sensor.h"
 
 Sensor::Sensor(string name,
@@ -30,11 +31,14 @@ Sensor::Sensor(string name,
     }
 
     // validate sampling frequency
-    if (samplingFrequency <= SAMPLING_FREQUENCY_LOWER_LIMIT || samplingFrequency > SAMPLING_FREQUENCY_UPPER_LIMIT) {
+    if (samplingFrequency < SAMPLING_FREQUENCY_LOWER_LIMIT || samplingFrequency > SAMPLING_FREQUENCY_UPPER_LIMIT) {
         throw std::invalid_argument("Invalid sampling frequency provided");
     } else {
         this->samplingFrequency = samplingFrequency;
     }
+
+    // create the callback timer
+    timer = new CallBackTimer();
 }
 
 bool Sensor::isFilenameAllowed(string filename) {
@@ -42,25 +46,44 @@ bool Sensor::isFilenameAllowed(string filename) {
     return true;
 }
 
-bool Sensor::setSamplingFrequency() {
-    return false;
+bool Sensor::setSamplingFrequency(unsigned long int samplingFrequency) {
+    if (samplingFrequency < SAMPLING_FREQUENCY_LOWER_LIMIT || samplingFrequency > SAMPLING_FREQUENCY_UPPER_LIMIT) {
+        return false;
+    } else {
+        this->samplingFrequency = samplingFrequency;
+    }
 }
 
-bool Sensor::start() {
+bool Sensor::startReading() {
     if (currentlyRunning) {
         return true;
     } else {
-        read();
+        timer->start(samplingFrequency, std::bind(&Sensor::read, this));
         currentlyRunning = true;
     }
     return false;
 }
 
-bool Sensor::stop() {
+bool Sensor::stopReading() {
     if (!currentlyRunning) {
         return true;
     } else {
+        timer->stop();
         currentlyRunning = false;
     }
     return false;
+}
+
+Sensor::~Sensor() {
+    delete timer;
+}
+
+bool Sensor::sendToOutputFile(string output) {
+    // TODO: Switch to named pipes
+    std::cout << output + " ";
+}
+
+string Sensor::receiveFromInput() {
+    // TODO: Switch to named pipes
+    return ".";
 }

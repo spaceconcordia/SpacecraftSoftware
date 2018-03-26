@@ -6,8 +6,9 @@
 #define SPACECRAFTSOFTWARE_SENSORS_H
 
 #include <string>
+#include "CallBackTimer.h"
 
-using std::string
+using std::string;
 
 enum class ReadWrite {
     READ,
@@ -28,17 +29,20 @@ public:
     string getInputFilename() { return inputFileName; }
     string getOutputFilename() { return outputFileName; }
     unsigned long int getSamplingFrequency() { return samplingFrequency; }
-    bool setSamplingFrequency();
+    bool setSamplingFrequency(unsigned long int samplingFrequency);
     string getName() { return name; }
     string getAddress() { return address; }
     ReadWrite getAction() { return action; }
-    bool isCurrentlyRunning() { return currentlyRunning}
-    bool start();
-    bool stop();
-    virtual ~Sensor() = 0;
+    bool isCurrentlyRunning() { return currentlyRunning; }
+    bool startReading();
+    bool stopReading();
+    virtual ~Sensor();
+protected:
+    bool sendToOutputFile(string output);
+    string receiveFromInput();
 private:
     virtual string read()= 0;
-    virtual string write() = 0;
+    virtual bool write(string toWrite) = 0;
     string name;
     string address;
     unsigned long int samplingFrequency;
@@ -46,6 +50,7 @@ private:
     string inputFileName;
     string outputFileName;
     bool currentlyRunning;
+    CallBackTimer* timer;
     bool isFilenameAllowed(string filename);
 };
 
