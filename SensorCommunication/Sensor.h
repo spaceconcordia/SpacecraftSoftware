@@ -26,6 +26,7 @@ public:
            ReadWrite action,
            string inputFileName,
            string outputFileName);
+    virtual ~Sensor();
     string getInputFilename() { return inputFileName; }
     string getOutputFilename() { return outputFileName; }
     unsigned long int getSamplingFrequency() { return samplingFrequency; }
@@ -36,13 +37,12 @@ public:
     bool isCurrentlyRunning() { return currentlyRunning; }
     bool startReading();
     bool stopReading();
-    virtual ~Sensor();
-protected:
-    bool sendToOutputFile(string output);
     string receiveFromInput();
+    virtual void writeTo(string toWrite) = 0;
+protected:
+    virtual void readFrom()= 0;
+    void sendToOutput(string output);
 private:
-    virtual string read()= 0;
-    virtual bool write(string toWrite) = 0;
     string name;
     string address;
     unsigned long int samplingFrequency;
@@ -51,7 +51,13 @@ private:
     string outputFileName;
     bool currentlyRunning;
     CallBackTimer* timer;
+    int fifoInput;
+    int fifoOutput;
+    bool createdFifoInput;
+    bool createdFifoOutput;
+    char readingFifoBuffer[512];
     bool isFilenameAllowed(string filename);
+    bool createNamedPipe(string filename, bool forWriting);
 };
 
 #endif //SPACECRAFTSOFTWARE_SENSORS_H

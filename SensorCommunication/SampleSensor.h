@@ -14,8 +14,8 @@ public:
                  string inputFileName, string outputFileName);
     ~SampleSensor() override {};
 private:
-    string read() override;
-    bool write(string toWrite) override;
+    void readFrom() override;
+    void writeTo(string toWrite) override;
 };
 
 

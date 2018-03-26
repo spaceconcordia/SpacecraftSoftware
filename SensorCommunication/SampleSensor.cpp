@@ -9,15 +9,11 @@ SampleSensor::SampleSensor(string name, string address, unsigned long samplingFr
                                                                                  action, inputFileName,
                                                                                  outputFileName) {}
 
-string SampleSensor::read() {
-    std::cout << "Enter an input: ";
-    string input;
-    std::cin >> input;
-    return input;
+void SampleSensor::readFrom() {
+    string input = receiveFromInput();
+    writeTo(input);
 }
 
-bool SampleSensor::write(string toWrite) {
-    std::cout << toWrite;
-    // for validation purposes
-    return true;
+void SampleSensor::writeTo(string toWrite) {
+    sendToOutput(toWrite);
 }
