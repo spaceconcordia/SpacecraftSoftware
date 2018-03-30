@@ -7,15 +7,15 @@ void testRAM::run() {
     sendMsg("Starting RAM test.");
     std::cout << "Starting RAM test." << std::endl;
 
-    unsigned long bytes = (32*1024*1024); // 32 MB
-    unsigned long volatile *data = (unsigned long *) malloc(sizeof(unsigned long) * bytes);
+    unsigned long bytes = (2*1024*1024); // 2 MB
+    unsigned long volatile *data = (unsigned long *) malloc(sizeof(unsigned long volatile) * bytes);
     unsigned long testDuration = testingParams::numberOfMinutesToRun;
     unsigned long bitFlipsCtr = 0;
 
     testDuration = testDuration * 60; // convert to seconds
 
-    printf("\nInitializing 64 MB size array of integers, setting all values to 0\n");
-    sendMsg("Initializing 64 MB size array of integers, setting all values to 0");
+    printf("\nInitializing 2 MB size array of integers, setting all values to 0\n");
+    sendMsg("Initializing 2 MB size array of integers, setting all values to 0");
 
     for (unsigned long i = 0; i < bytes; i++) {
         data[i] = 0;
@@ -35,11 +35,11 @@ void testRAM::run() {
             }
         }
         numLoops++;
-        sendMsg("Errors: " + std::to_string(bitFlipsCtr) + " bits / " + std::to_string(32 * numLoops) + " MB");
+        sendMsg("Errors: " + std::to_string(bitFlipsCtr) + " bits / " + std::to_string(2 * numLoops) + " MB");
     }
 
     printf("\nFinished memory test with %ld bit flip(s) detected\n", bitFlipsCtr);
-    sendMsg("Finished memory test with " + std::to_string(bitFlipsCtr) + " bits in error / " + std::to_string(32 * numLoops) + " MB.");
+    sendMsg("Finished memory test with " + std::to_string(bitFlipsCtr) + " bits in error / " + std::to_string(2 * numLoops) + " MB.");
 
     free((void*)data);
 }
