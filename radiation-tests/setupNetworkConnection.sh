@@ -59,6 +59,10 @@ sleep 2s
 
 # Set iptabls to allow port forwarding from the arietta to the host network device
 # Masquerade as if it is using the same network
+iptables -A FORWARD -i $usb_device -j ACCEPT
+
+sleep 2s
+
 iptables -t nat -A POSTROUTING -s $arietta_address/32 -o $network_device -j MASQUERADE
 
 sleep 2s
