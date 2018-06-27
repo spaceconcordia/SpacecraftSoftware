@@ -168,6 +168,8 @@ if __name__ == "__main__":
     try:
         main()
 
+    except:
+        print(" ")
+
     finally:
         sys.path[:] = path  # restore
-
