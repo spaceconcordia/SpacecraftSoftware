@@ -770,7 +770,7 @@ def pinname2kernelid(pinname):
 class GPIO():
 	kernel_id=None
 	fd=None
-	iopath = None
+	iopath=None
 
 	def __init__(self,pin,mode):
 		self.kernel_id=pinname2kernelid(pin)
@@ -779,9 +779,11 @@ class GPIO():
 		direction(self.kernel_id,pinmode[mode])
 
 		iopath=get_gpio_path(self.kernel_id)
-		self.iopath = iopath
 		if os.path.exists(iopath): 
 			self.fd = open(iopath + '/value','r')
+
+		self.iopath = iopath
+
 
 	def high(self):
 		set_value(self.kernel_id,1)
@@ -791,9 +793,15 @@ class GPIO():
 
 	def on(self):
 		set_value(self.kernel_id,1)
+
+        def on2(self,kernel_id):
+                set_value(kernel_id,1)
 		
 	def off(self):
 		set_value(self.kernel_id,0)
+
+        def off2(self,kernel_id):
+                set_value(kernel_id,0)
 
 	def digitalWrite(self,level):
 		set_value(self.kernel_id,pinlevel[level])

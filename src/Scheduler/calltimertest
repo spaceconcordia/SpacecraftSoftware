@@ -1,0 +1,2 @@
+#!/bin/bash
+bash /root/csdc4/src/Scheduler/tmp.bash timertest.timer

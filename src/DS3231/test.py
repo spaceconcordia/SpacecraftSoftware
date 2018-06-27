@@ -5,11 +5,9 @@ import datetime
 Define helper functions
 """
 
-
 def print_clock_states(ds):
     print 'Current Hardware Clock: ' + ds.read_datetime().strftime('%m/%d/%Y %H:%M:%S')
-    print 'Current System Clock: ' + \
-        datetime.datetime.now().strftime('%m/%d/%Y %H:%M:%S')
+    print 'Current System Clock: ' + datetime.datetime.now().strftime('%m/%d/%Y %H:%M:%S')
     print ' '
 
 
@@ -23,7 +21,7 @@ Run the main script
 """
 
 if __name__ == "__main__":
-    ds = DS3231(0)
+    ds = SDL_DS3231(0)
 
     clocks_synced = are_clocks_synced(ds)
     print_clock_states(ds)

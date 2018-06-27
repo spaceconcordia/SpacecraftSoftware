@@ -9,7 +9,7 @@
 # please send patches to: https://github.com/switchdoclabs/RTC_SDL_DS3231
 
 
-# encoding: utf-8
+#encoding: utf-8
 
 # Copyright (C) 2013 @XiErCh
 #
@@ -47,8 +47,7 @@ MAX_DAYS_PER_MONTH = 31
 MONTHS_PER_YEAR = 12
 YEARS_PER_CENTURY = 100
 
-OSCILLATOR_ON_MASK = 0b1 << 7
-
+OSCILLATOR_ON_MASK = 0b1<<7
 
 def bcd_to_int(bcd, n=2):
     """Decode n least significant packed binary coded decimal digits to binary.
@@ -70,7 +69,7 @@ def int_to_bcd(x, n=2):
     return int(str(x)[-n:], 0x10)
 
 
-class SDL_DS3231():
+class DS3231():
     (
         _REG_SECONDS,
         _REG_MINUTES,
@@ -111,7 +110,7 @@ class SDL_DS3231():
         """Return tuple of year, month, date, day, hours, minutes, seconds.
         Since each value is read one byte at a time,
         it might not be coherent."""
-
+        
         register_addresses = (
             self._REG_SECONDS,
             self._REG_MINUTES,
@@ -169,7 +168,7 @@ class SDL_DS3231():
             0, tzinfo=tzinfo)
 
     def write_all(self, seconds=None, minutes=None, hours=None, day=None,
-                  date=None, month=None, year=None, save_as_24h=True):
+            date=None, month=None, year=None, save_as_24h=True):
         """Direct write un-none value.
         Range: seconds [0,59], minutes [0,59], hours [0,23],
                day [0,7], date [1-31], month [1-12], year [0-99].
@@ -188,8 +187,7 @@ class SDL_DS3231():
         if hours is not None:
             if not 0 <= hours < HOURS_PER_DAY:
                 raise ValueError('Hours is out of range [0,23].')
-            # not  | 0x40 according to datasheet
-            self._write(self._REG_HOURS, int_to_bcd(hours))
+            self._write(self._REG_HOURS, int_to_bcd(hours) ) # not  | 0x40 according to datasheet
 
         if year is not None:
             if not 0 <= year < YEARS_PER_CENTURY:
@@ -216,17 +214,16 @@ class SDL_DS3231():
         """Write from a datetime.datetime object.
         """
         self.write_all(dt.second, dt.minute, dt.hour,
-                       dt.isoweekday(), dt.day, dt.month, dt.year % 100)
+                dt.isoweekday(), dt.day, dt.month, dt.year % 100)
 
     def write_now(self):
         """Equal to DS3231.write_datetime(datetime.datetime.now()).
         """
         self.write_datetime(datetime.now())
 
-    def get_temperature(self):
-        byte_tmsb = self._bus.read_byte_data(self._addr, 0x11)
-        byte_tlsb = bin(self._bus.read_byte_data(
-            self._addr, 0x12))[2:].zfill(8)
+    def getTemp(self):
+        byte_tmsb = self._bus.read_byte_data(self._addr,0x11)
+        byte_tlsb = bin(self._bus.read_byte_data(self._addr,0x12))[2:].zfill(8)
         return byte_tmsb+int(byte_tlsb[0])*2**(-1)+int(byte_tlsb[1])*2**(-2)
 
     ###########################
@@ -234,9 +231,9 @@ class SDL_DS3231():
     # datasheet: atmel.com/Images/doc0336.pdf
     ###########################
 
-    def set_current_AT24C32_address(self, address):
-        a1, a0 = divmod(address, 1 << 8)
-        self._bus.write_i2c_block_data(self._at24c32_addr, a1, [a0])
+    def set_current_AT24C32_address(self,address):
+        a1, a0 = divmod(address, 1<<8)
+        self._bus.write_i2c_block_data(self._at24c32_addr,a1,[a0])
 
     def read_AT24C32_byte(self, address):
         if False:
@@ -252,6 +249,6 @@ class SDL_DS3231():
             print(
                 "i2c_address =0x%x eepromaddress = 0x%x value = 0x%x %i " %
                 (self._at24c32_addr, address, value, value))
-        a1, a0 = divmod(address, 1 << 8)
-        self._bus.write_i2c_block_data(self._at24c32_addr, a1, [a0, value])
+        a1, a0 = divmod(address, 1<<8)
+        self._bus.write_i2c_block_data(self._at24c32_addr,a1,[a0, value])
         time.sleep(0.20)

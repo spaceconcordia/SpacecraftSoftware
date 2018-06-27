@@ -20,7 +20,7 @@ def menu_main():
     print("Main Menu:")
     print("1. Clock")
     print("2. Sensors")
-    print("3. Operations")
+    print("3. Payload")
     print("4. Tests")
 
     menu_map = {
@@ -84,9 +84,9 @@ def menu_clock():
     menu_map = {
         1: lambda: print(dt.datetime.now().strftime('%m/%d/%Y %H:%M:%S')),
         2: lambda: print(ds.read_datetime().strftime('%m/%d/%Y %H:%M:%S')),
-        3: lambda: set_system_clock(ds),
+        3: set_system_clock,
         4: lambda: set_hardware_clock(ds),
-        5: sync_clocks
+        5: lambda: sync_clocks(ds)
     }
 
     menu_input = input('>>> ')
@@ -120,13 +120,8 @@ def menu_sensors():
 
 def menu_payload():
     def deploy_payload():
-        deployment_a = GPIO('J4.8', 'OUTPUT')
-        deployment_b = GPIO('J4.10', 'OUTPUT')
-        deployment_a.on()
-        deployment_b.on()
-        time.sleep(10)
-        deployment_a.off()
-        deployment_b.off()
+        # CALL GPIO DEPLOY SHIT
+        return
 
     def fetch_experiment_data():
         with open("Payload/data.log") as f:
@@ -135,9 +130,9 @@ def menu_payload():
                 time.sleep(0.5)
 
     print(" ")
-    print("Operations Menu:")
-    print("1. Deploy Satellite")
-    print("2. Fetch Payload Data")
+    print("Payload Menu:")
+    print("1. Deploy")
+    print("2. Fetch experiment data")
 
     menu_map = {
         1: deploy_payload,

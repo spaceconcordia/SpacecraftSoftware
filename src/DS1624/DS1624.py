@@ -4,7 +4,7 @@ import logging
 import struct
 
 
-class TempSensor:
+class DS1624:
     """
 
     Class to read out an DS1624 temperature sensor with a given address.

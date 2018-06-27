@@ -1,0 +1,4 @@
+#!/bin/bash
+#/root/csdc4/src/Scheduler/deployOnFirstBoot
+systemctl enable firstbootdeployment.service
+#systemctl disable firstbootdeployment.service

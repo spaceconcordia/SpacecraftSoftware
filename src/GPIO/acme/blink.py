@@ -9,6 +9,8 @@ print "The arguments are: " , str(sys.argv)
 #Roadrunner example
 led = GPIO(sys.argv[1],'OUTPUT') 
 
+#led = GPIO('J4.24','OUTPUT')
+
 while True:
     led.on()
     sleep(1)
