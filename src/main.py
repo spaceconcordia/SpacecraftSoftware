@@ -169,7 +169,7 @@ if __name__ == "__main__":
         main()
 
     except:
-        print(" ")
+        print("An error has occurred, program exiting now.")
 
     finally:
         sys.path[:] = path  # restore
